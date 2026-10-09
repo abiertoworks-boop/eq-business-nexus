@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>交流武将診断</title>
+<meta name="description" content="あなたが戦国時代に生きていたら、どの武将だった？ 人とのつながり方から見る「交流武将」診断。">
+<meta property="og:title" content="あなたが戦国時代に生きていたら、どの武将だった？">
+<meta property="og:description" content="人とのつながり方から見る、あなたの「交流武将」診断。全10問。">
+<meta property="og:image" content="img/hideyoshi.webp">
+<meta name="theme-color" content="#0d0b09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho+B1:wght@500;700;800&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0b09; --ink2:#17130f; --ink3:#221c16;
+  --washi:#efe6d2; --washi2:#e4d8bd; --paper-ink:#2a221a; --paper-muted:#6d5f4c;
+  --gold:#c9a45c; --gold2:#e6c987; --gold-dim:#8a7140;
+  --red:#9b2420; --red2:#c23a2c; --navy:#1b2440;
+  --text:#ece3d0; --muted:#a69a85; --line:rgba(201,164,92,.28);
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --brush:"Yuji Syuku","Shippori Mincho B1",serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  background:var(--ink);
+  color:var(--text);font-family:"Noto Sans JP",system-ui,sans-serif;line-height:1.85;font-size:16px;
+  -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;
+}
+/* 背景：合戦の風景を暗く落として文字を読みやすく（iOSでも固定されるよう fixed 要素で敷く） */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(13,11,9,.62) 0%, rgba(13,11,9,.78) 45%, rgba(13,11,9,.9) 100%),
+    url("img/bg.webp") 62% 30% / cover no-repeat, var(--ink);
+  filter:saturate(.85)}
+body::before{ /* 和紙の繊維感 */
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.45;margin:0}
+p{margin:0}
+.screen{display:none}
+.screen.on{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;letter-spacing:.32em;color:var(--gold);font-weight:700}
+.gold{color:var(--gold2)}
+.btn{
+  appearance:none;border:0;cursor:pointer;font:inherit;font-family:var(--serif);font-weight:800;letter-spacing:.12em;
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;padding:14px 20px;border-radius:4px;
+  color:#fff;background:linear-gradient(180deg,var(--red2),var(--red));
+  box-shadow:0 0 0 1px var(--gold-dim) inset, 0 10px 30px -10px rgba(194,58,44,.6);
+  font-size:18px;text-decoration:none;transition:transform .15s, filter .15s;
+}
+.btn:active{transform:scale(.98)}
+.btn:hover{filter:brightness(1.08)}
+.btn.sub{background:transparent;color:var(--gold2);box-shadow:0 0 0 1px var(--line) inset;font-size:15px;min-height:50px}
+.btn.gold-btn{background:linear-gradient(180deg,#d9b56a,#a8853f);color:#1b140b;box-shadow:0 10px 30px -10px rgba(201,164,92,.6)}
+.small{font-size:12px;color:var(--muted);line-height:1.7}
+
+/* ===== intro ===== */
+.hero{text-align:center;padding:28px 0 8px}
+.hero .seal{display:inline-block;width:46px;height:46px;border:2px solid var(--red2);color:var(--red2);font-family:var(--brush);font-size:14px;line-height:1.1;padding:6px 4px;transform:rotate(-6deg);margin-bottom:18px;border-radius:3px}
+.hero h1{font-family:var(--brush);font-weight:400;font-size:34px;line-height:1.5;letter-spacing:.04em;color:#f6efe0;text-shadow:0 2px 20px rgba(0,0,0,.6)}
+.hero h1 em{font-style:normal;color:var(--gold2)}
+.hero .copy{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-top:16px}
+.portraits{display:flex;justify-content:center;margin:26px auto 4px;height:116px}
+.portraits img{width:78px;height:104px;object-fit:cover;object-position:60% 18%;border-radius:4px;border:1px solid var(--gold-dim);margin:0 -10px;box-shadow:0 8px 24px rgba(0,0,0,.6);filter:saturate(.9)}
+.portraits img:nth-child(1){transform:rotate(-8deg) translateY(10px)}
+.portraits img:nth-child(2){transform:rotate(-3deg);z-index:1}
+.portraits img:nth-child(3){transform:translateY(-6px);z-index:2;width:86px;height:114px}
+.portraits img:nth-child(4){transform:rotate(3deg);z-index:1}
+.portraits img:nth-child(5){transform:rotate(8deg) translateY(10px)}
+.scroll{background:var(--washi);color:var(--paper-ink);border-radius:3px;padding:26px 22px;margin-top:22px;position:relative;
+  box-shadow:0 0 0 1px rgba(0,0,0,.2), 0 20px 40px -20px rgba(0,0,0,.8)}
+.scroll::before,.scroll::after{content:"";position:absolute;left:-6px;right:-6px;height:10px;background:linear-gradient(180deg,#3a2c1d,#1d150d);border-radius:5px}
+.scroll::before{top:-5px}.scroll::after{bottom:-5px}
+.scroll p{font-family:var(--serif);font-size:15.5px;line-height:2}
+.scroll .muted{color:var(--paper-muted)}
+.attrs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:22px 0 4px}
+.attr{border:1px solid var(--line);background:rgba(255,255,255,.02);border-radius:4px;padding:10px 12px;font-size:12px;color:var(--muted);line-height:1.5}
+.attr b{display:block;font-size:12px;letter-spacing:.14em;color:var(--gold2)}
+.attr span{color:var(--text);font-size:13px}
+.attr:last-child{grid-column:1/-1}
+.cta-area{margin-top:26px}
+.guide{margin-top:14px;padding-top:14px;border-top:1px dashed #b8a780;font-family:var(--serif);font-weight:700;color:var(--red)!important}
+.guide-r{margin-top:28px;font-family:var(--serif);font-size:14px;color:var(--gold2);line-height:1.9}
+.meta-line{text-align:center;margin-top:10px;font-size:13px;color:var(--muted)}
+.disclaimer{margin-top:28px;text-align:center}
+
+/* ===== quiz ===== */
+.qhead{text-align:center;margin:6px 0 18px}
+.qno{font-family:var(--serif);letter-spacing:.24em;font-size:13px;color:var(--gold)}
+.qno b{font-size:22px;color:var(--gold2);letter-spacing:.08em}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.dots i{width:9px;height:9px;border-radius:50%;border:1px solid var(--gold-dim);transition:.3s}
+.dots i.done{background:var(--gold);border-color:var(--gold)}
+.dots i.now{background:var(--red2);border-color:var(--red2);transform:scale(1.25)}
+.qcard{background:var(--washi);color:var(--paper-ink);border-radius:4px;padding:24px 20px 20px;position:relative;
+  box-shadow:0 0 0 1px rgba(0,0,0,.25), 0 24px 50px -24px rgba(0,0,0,.9)}
+.qcard .stamp{position:absolute;top:-14px;left:18px;background:var(--red);color:#fff;font-family:var(--serif);font-size:12px;letter-spacing:.2em;padding:3px 12px;border-radius:2px}
+.qtext{font-size:19px;line-height:1.7;margin:6px 0 18px;font-weight:800}
+.qtext .quote{display:block;font-size:17px;color:var(--red);margin:6px 0}
+.opts{display:grid;gap:10px}
+.opt{appearance:none;display:flex;gap:12px;align-items:center;width:100%;min-height:60px;text-align:left;font:inherit;font-size:15.5px;line-height:1.6;color:var(--paper-ink);
+  background:#f8f2e4;border:1px solid #cdbf9f;border-radius:4px;padding:12px 14px;cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
+.opt:active{transform:scale(.99)}
+.opt .k{flex:none;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:var(--ink2);color:var(--gold2);font-family:var(--serif);font-weight:700;font-size:14px}
+@media (hover:hover){.opt:hover{border-color:var(--red);background:#fffaf0}}
+.opt.sel{background:var(--ink2);color:var(--text);border-color:var(--gold)}
+.opt.sel .k{background:var(--red2);color:#fff}
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:16px;min-height:40px}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;padding:8px 4px}
+.ack{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.9);z-index:20;pointer-events:none;opacity:0;
+  font-family:var(--serif);font-weight:800;font-size:18px;letter-spacing:.14em;color:var(--gold2);
+  background:rgba(13,11,9,.92);border:1px solid var(--gold-dim);padding:16px 26px;border-radius:3px;white-space:nowrap;transition:opacity .2s,transform .2s}
+.ack.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* ===== summon ===== */
+#s-summon{position:fixed;inset:0;z-index:30;background:var(--ink);place-items:center;text-align:center}
+#s-summon.on{display:grid}
+.summon-ring{width:150px;height:150px;margin:0 auto 34px;border-radius:50%;position:relative}
+.summon-ring::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--gold);border-top-color:transparent;border-left-color:transparent;animation:spin 1.4s linear infinite}
+.summon-ring::after{content:"";position:absolute;inset:16px;border-radius:50%;border:1px dashed var(--gold-dim);animation:spin 3s linear infinite reverse}
+.summon-ring span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--brush);font-size:46px;color:var(--red2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.summon-text{font-family:var(--serif);font-weight:800;font-size:20px;letter-spacing:.14em;min-height:2em;color:var(--text);padding:0 16px}
+.summon-text.swap{animation:fade .5s ease}
+
+/* ===== result ===== */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease, transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.r-intro{text-align:center;font-family:var(--serif);font-size:15px;letter-spacing:.2em;color:var(--muted);margin:8px 0 14px}
+.card-frame{position:relative;border-radius:6px;padding:3px;background:linear-gradient(135deg,#f1d999,#8a6a2f 40%,#e6c987 60%,#6e5222);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.9), 0 0 60px -10px rgba(201,164,92,.35)}
+.card-frame img{display:block;width:100%;height:auto;aspect-ratio:1328/1760;border-radius:4px;background:var(--ink2)}
+.card-frame.pop{animation:summonIn 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes summonIn{0%{opacity:0;transform:scale(.86);filter:brightness(3) blur(6px)}60%{opacity:1;filter:brightness(1.4) blur(0)}100%{transform:none;filter:none}}
+.zoom-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:8px}
+.name-block{text-align:center;margin:26px 0 6px}
+.name-block .label{font-size:12px;letter-spacing:.3em;color:var(--gold)}
+.bname{font-family:var(--brush);font-weight:400;font-size:48px;line-height:1.3;margin:4px 0 0;color:#f8f1e1;letter-spacing:.06em}
+.bread{font-size:12px;letter-spacing:.3em;color:var(--muted)}
+.btitle{display:inline-block;font-family:var(--serif);font-weight:800;font-size:18px;color:var(--gold2);margin-top:10px;padding:2px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+.panel{background:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:22px 18px;margin-top:22px}
+.panel h3{font-size:13px;letter-spacing:.3em;color:var(--gold);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.panel h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.attr-main{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.am{border-radius:4px;padding:14px 12px;text-align:center;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.am.main{background:linear-gradient(180deg,rgba(194,58,44,.25),rgba(155,36,32,.08));border-color:rgba(194,58,44,.6)}
+.am small{display:block;font-size:10px;letter-spacing:.24em;color:var(--muted)}
+.am b{display:block;font-family:var(--serif);font-size:18px;letter-spacing:.08em;margin:4px 0 0;color:#fff}
+.am span{font-size:12px;color:var(--gold2)}
+.balance{display:grid;gap:8px;margin-top:16px}
+.bal{display:grid;grid-template-columns:104px 1fr 40px;gap:10px;align-items:center;font-size:12px}
+.bal .track{height:8px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.bal .track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold2));transition:width 1s ease .2s}
+.bal.top .track i{background:linear-gradient(90deg,var(--red),var(--red2))}
+.bal .pct{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.stat{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;padding:6px 0;border-bottom:1px dashed rgba(201,164,92,.15)}
+.stat .stars{color:var(--gold2);letter-spacing:.08em;font-size:13px}
+.stat .stars em{font-style:normal;color:rgba(201,164,92,.25)}
+.stats-sub{grid-column:1/-1;font-size:11px;letter-spacing:.24em;color:var(--muted);margin-top:10px}
+@media (max-width:380px){.stats{grid-template-columns:1fr}}
+
+.paper{background:var(--washi);color:var(--paper-ink);border-radius:4px;padding:24px 20px;margin-top:22px;position:relative;box-shadow:0 20px 40px -20px rgba(0,0,0,.8)}
+.paper .tag{display:inline-block;font-family:var(--serif);font-weight:800;font-size:13px;letter-spacing:.2em;background:var(--ink2);color:var(--gold2);padding:3px 12px;border-radius:2px}
+.paper h4{font-size:22px;margin:12px 0 10px;font-weight:800}
+.paper p{font-size:15px;line-height:1.95}
+
+.black{margin:38px -16px 0;padding:46px 22px 40px;background:
+  radial-gradient(ellipse 80% 50% at 50% 0%, rgba(155,36,32,.35), transparent 70%), #050403;
+  border-top:1px solid rgba(194,58,44,.4);border-bottom:1px solid rgba(194,58,44,.4);text-align:center;position:relative;overflow:hidden}
+.black .but{font-family:var(--serif);font-weight:800;font-size:28px;letter-spacing:.3em;color:#fff}
+.black .lead{font-family:var(--serif);font-size:15px;color:var(--muted);margin-top:8px}
+.black .mode{display:inline-block;margin-top:22px;font-size:11px;letter-spacing:.4em;color:var(--red2);border:1px solid var(--red2);padding:4px 12px 4px 16px}
+.black .mode-title{font-family:var(--brush);font-weight:400;font-size:30px;color:var(--red2);margin-top:12px;letter-spacing:.08em;text-shadow:0 0 24px rgba(194,58,44,.5)}
+.black blockquote{margin:24px 0 0;font-family:var(--serif);font-weight:800;font-size:19px;line-height:1.85;color:#f4ede0}
+.black .more{margin-top:22px;text-align:left;border-left:2px solid var(--red2);padding:6px 0 6px 16px;font-size:15px;line-height:2;color:#d7cdbb;white-space:pre-line}
+.black .ink{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(194,58,44,.18),transparent 70%);right:-80px;bottom:-80px}
+
+.skill{margin-top:22px;border-radius:6px;padding:3px;background:linear-gradient(135deg,var(--gold2),var(--gold-dim))}
+.skill-in{background:linear-gradient(180deg,#1d1710,#0f0c08);border-radius:4px;padding:20px 18px;display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center}
+.skill-ico{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:radial-gradient(circle,#3a2c16,#1a130a);border:1px solid var(--gold)}
+.skill small{font-size:10px;letter-spacing:.3em;color:var(--gold)}
+.skill h4{font-family:var(--brush);font-weight:400;font-size:24px;color:var(--gold2);margin:2px 0 4px}
+.skill p{font-size:14px;line-height:1.8;color:var(--text)}
+
+.weak h4{color:var(--red)}
+.weak .tag{background:var(--red);color:#fff}
+.weak p{white-space:pre-line}
+
+.partner-lead{font-family:var(--serif);font-size:16px;line-height:1.9}
+.partner-lead b{color:var(--gold2)}
+.why{margin-top:12px;font-size:14px;color:var(--muted);border-left:2px solid var(--gold-dim);padding-left:12px;white-space:pre-line}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.pcard{appearance:none;border:1px solid var(--line);background:var(--ink3);border-radius:4px;padding:0;overflow:hidden;cursor:pointer;color:var(--text);font:inherit;text-align:center}
+.pcard img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;object-position:62% 14%}
+.pcard span{display:block;font-family:var(--serif);font-weight:700;font-size:13px;padding:6px 2px 2px}
+.pcard small{display:block;font-size:10px;color:var(--muted);padding:0 4px 8px;line-height:1.4}
+
+.final{text-align:center;margin-top:44px}
+.final h2{font-family:var(--serif);font-size:24px;line-height:1.6}
+.final .q2{font-family:var(--serif);color:var(--muted);margin-top:12px;line-height:2}
+.final .big{font-family:var(--brush);font-weight:400;font-size:30px;color:var(--gold2);margin-top:28px;line-height:1.5}
+.final .sub{font-size:14px;color:var(--text);margin:6px 0 20px;letter-spacing:.1em}
+.actions{display:grid;gap:10px;margin-top:14px}
+
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.gallery .pcard span{font-size:11px;padding:4px 2px 6px}
+@media (max-width:380px){.gallery{grid-template-columns:repeat(3,1fr)}}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:40;background:rgba(5,4,3,.92);display:none;overflow-y:auto;padding:24px 16px}
+.modal.on{display:block;animation:fade .3s ease}
+.modal-in{max-width:480px;margin:0 auto}
+.modal img{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--gold-dim)}
+.modal .close{position:sticky;top:0;margin-left:auto;display:block;background:var(--ink2);color:var(--text);border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;margin-bottom:10px;z-index:2}
+.modal .mt{text-align:center;font-family:var(--serif);color:var(--gold2);margin:14px 0 6px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--washi);color:var(--paper-ink);font-weight:700;padding:10px 20px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.toast.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="wrap">
+
+<!-- ================= 表紙 ================= -->
+<section class="screen on" id="s-intro">
+  <div class="hero">
+    <div class="seal">交流<br>武将</div>
+    <h1>あなたが<em>戦国時代</em>に<br>生きていたら、<br>どの武将だった？</h1>
+    <p class="copy">人とのつながり方から見る、<br>あなたの「交流武将」診断。</p>
+    <div class="portraits" aria-hidden="true">
+      <img src="img/nobunaga.webp" alt="" decoding="async">
+      <img src="img/masamune.webp" alt="" decoding="async">
+      <img src="img/hideyoshi.webp" alt="" decoding="async">
+      <img src="img/ieyasu.webp" alt="" decoding="async">
+      <img src="img/yukimura.webp" alt="" decoding="async">
+    </div>
+  </div>
+
+  <div class="scroll">
+    <p>人脈を広げる人。<br>人の話を聞く人。<br>人を支える人。<br>新しいものを生み出す人。<br>人や組織を育てる人。</p>
+    <p style="margin-top:14px">人との関わり方には、<br>それぞれ得意なスタイルがあります。</p>
+    <p class="muted" style="margin-top:14px">10問の質問に答えて、あなたの「交流力」を<br>戦国武将にたとえてみましょう。</p>
+    <p class="guide">人との交流時に、<br>自分と相手の特性を知る目安となります。</p>
+  </div>
+
+  <div class="attrs">
+    <div class="attr"><b>🧲 CONNECTOR</b><span>人をつなぐ力</span><br>外交力・人脈力</div>
+    <div class="attr"><b>👂 LISTENER</b><span>人を知る力</span><br>洞察力・情報収集力</div>
+    <div class="attr"><b>🤝 SUPPORTER</b><span>人を支える力</span><br>人望・家臣掌握力</div>
+    <div class="attr"><b>💡 CREATOR</b><span>生み出す力</span><br>革新力・発想力</div>
+    <div class="attr"><b>🏯 BUILDER</b><span>関係を育てる力</span>　統率力・組織構築力</div>
+  </div>
+
+  <div class="cta-area">
+    <button class="btn" id="start">いざ、診断開始！</button>
+    <button class="btn sub" id="last" hidden style="margin-top:10px"></button>
+    <p class="meta-line">全10問 ・ 約2分 ・ 登場武将 全20人</p>
+  </div>
+  <p class="small disclaimer">※この診断は、戦国武将をモチーフにしたエンターテインメントコンテンツです。<br>実在した人物の性格や能力を科学的に判定するものではありません。</p>
+</section>
+
+<!-- ================= 質問 ================= -->
+<section class="screen" id="s-quiz">
+  <div class="qhead">
+    <div class="qno">QUESTION <b id="qn">01</b> / 10</div>
+    <div class="dots" id="dots"></div>
+  </div>
+  <div class="qcard">
+    <span class="stamp">軍議</span>
+    <h2 class="qtext" id="qtext"></h2>
+    <div class="opts" id="opts"></div>
+  </div>
+  <div class="qnav">
+    <button class="link" id="back">← 前の問いへ</button>
+    <span class="small">直感で選ぶのが吉</span>
+  </div>
+</section>
+
+<!-- ================= 結果 ================= -->
+<section class="screen" id="s-result">
+  <p class="r-intro">あなたの交流武将は……</p>
+
+  <div class="card-frame" id="r-frame">
+    <img id="r-img" alt="" width="1328" height="1760">
+  </div>
+  <p class="zoom-hint">画像を長押しで保存できます</p>
+
+  <div class="name-block reveal">
+    <div class="label">YOUR BUSHO</div>
+    <h2 class="bname" id="r-name"></h2>
+    <div class="bread" id="r-read"></div>
+    <div class="btitle" id="r-title"></div>
+  </div>
+
+  <div class="panel reveal">
+    <h3>交流属性</h3>
+    <div class="attr-main">
+      <div class="am main"><small>MAIN ATTRIBUTE</small><b id="r-main"></b><span id="r-main-ja"></span></div>
+      <div class="am"><small>SUB ATTRIBUTE</small><b id="r-sub"></b><span id="r-sub-ja"></span></div>
+    </div>
+    <div class="balance" id="r-balance"></div>
+  </div>
+
+  <div class="panel reveal">
+    <h3>武将ステータス</h3>
+    <div class="stats" id="r-stats"></div>
+  </div>
+
+  <div class="paper reveal">
+    <span class="tag">表の顔</span>
+    <h4 id="r-omote"></h4>
+    <p id="r-desc"></p>
+  </div>
+
+  <div class="black reveal">
+    <div class="ink"></div>
+    <p class="but">……しかし。</p>
+    <p class="lead">あなたには、もう一つの顔があります。</p>
+    <div class="mode">BLACK BUSHO MODE</div>
+    <div class="mode-title">ブラック武将モード</div>
+    <blockquote id="r-ura"></blockquote>
+    <p class="more" id="r-ura2"></p>
+  </div>
+
+  <div class="skill reveal">
+    <div class="skill-in">
+      <div class="skill-ico">⚔️</div>
+      <div>
+        <small>あなたの特殊能力</small>
+        <h4 id="r-skill"></h4>
+        <p id="r-skill-d"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="paper weak reveal">
+    <span class="tag">天下人にも弱点がある</span>
+    <h4 id="r-weak"></h4>
+    <p id="r-weak-d"></p>
+  </div>
+
+  <div class="panel reveal">
+    <h3>あなたに必要な「家臣」</h3>
+    <p class="partner-lead" id="r-partner"></p>
+    <p class="why" id="r-why"></p>
+    <div class="pgrid" id="r-pgrid"></div>
+  </div>
+
+  <div class="final reveal">
+    <h2>あなたは、<br>どんな武将と出会いたい？</h2>
+    <p class="q2">自分と同じタイプ？<br>それとも、自分にはない力を持つ武将？</p>
+    <p class="big">本物の「武将」に<br>会いに行く。</p>
+    <p class="sub">人脈を活かせるビジネス交流会</p>
+    <a class="btn" id="event" href="#" target="_blank" rel="noopener">交流会に参戦する</a>
+    <div class="actions">
+      <button class="btn gold-btn" id="share">この結果を仲間に見せる</button>
+      <button class="btn sub" id="all">他の武将も見てみる</button>
+      <button class="btn sub" id="retry">もう一度診断する</button>
+    </div>
+    <div class="gallery" id="gallery" hidden></div>
+    <p class="guide-r">この結果は、人との交流時に<br>自分と相手の特性を知る目安となります。</p>
+    <p class="small disclaimer">※この診断は、戦国武将をモチーフにしたエンターテインメントコンテンツです。<br>実在した人物の性格や能力を科学的に判定するものではありません。</p>
+  </div>
+</section>
+</div>
+
+<!-- 召喚演出 -->
+<section class="screen" id="s-summon" aria-live="polite">
+  <div>
+    <div class="summon-ring"><span>陣</span></div>
+    <p class="summon-text" id="summon-text"></p>
+  </div>
+</section>
+
+<div class="ack" id="ack">その選択、承りました。</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-in">
+    <button class="close" id="m-close" aria-label="閉じる">✕</button>
+    <div id="m-body"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 交流会のURL（ここを差し替えてください） */
+const EVENT_URL = "#";
+
+const ATTRS = ["CON","LIS","SUP","CRE","BUI"];
+const A = {
+  CON:{en:"CONNECTOR", ja:"人をつなぐ力",           ico:"🧲", stat:"人脈力"},
+  LIS:{en:"LISTENER",  ja:"人を知る力",             ico:"👂", stat:"洞察力"},
+  SUP:{en:"SUPPORTER", ja:"人を支える力",           ico:"🤝", stat:"人望"},
+  CRE:{en:"CREATOR",   ja:"新しいものを生み出す力", ico:"💡", stat:"創造力"},
+  BUI:{en:"BUILDER",   ja:"関係を育てる力",         ico:"🏯", stat:"統率力"},
+};
+const BUSHO_STATS = ["戦略力","決断力","カリスマ","策略性","忍耐力"];
+
+/* 選択肢は CON, LIS, SUP, CRE, BUI の順で定義（表示時はシャッフル） */
+const Q = [
+  {t:"初対面の人と話すとき、一番気になるのは？", o:[
+    "「この人と、この人をつないだら面白そう」","「この人、どんなことを考えているんだろう？」","「この人に何か力になれることはあるかな？」","「この人と何か面白いことができそう」","「この人とは長く付き合えそうかな？」"]},
+  {t:"相手が自分の仕事について話し始めたら？", o:[
+    "知り合いに合いそうな人がいないか考える","質問しながら、相手の話を深掘りする","自分の経験から役立ちそうなことを探す","話を聞きながら、新しいアイデアを考える","今後も関係を続ける方法を考える"]},
+  {t:"あなたが「この人すごい」と思う人は？", o:[
+    "とにかく人脈が広い","話をすると、自分の考えまで整理される","困ったときに必ず助けてくれる","次々と新しいことを思いつく","何年付き合っても変わらず信頼できる"]},
+  {t:"「○○な人を知りませんか？」と相談されたら？", o:[
+    "すぐに知り合いを思い浮かべる","「なぜその人を探しているの？」と聞く","「自分にできることは？」と考える","「そもそも別の方法もあるんじゃない？」と考える","紹介した後のことまで気になる"]},
+  {t:"交流会で話が盛り上がってきたら？", o:[
+    "「この人、誰とつないだら面白いかな」と考える","「もっとこの人のことを知りたい」と思う","「何か役に立てることはないかな」と考える","「この話から何か生まれそう」と考える","「また次も会いたいな」と思う"]},
+  {t:"初対面の人から突然、", quote:"「今度、一緒に何かやりませんか？」", t2:"と言われたら？", o:[
+    "「誰を巻き込もうかな？」","「まず、あなたは何をしたいんですか？」","「自分に何ができるかな？」","「面白そう！何ができるかな？」","「ちゃんと続けられる話なのかな？」"]},
+  {t:"あなたが人と付き合う上で一番大切だと思うのは？", o:["つながり","理解","助け合い","刺激","信頼"]},
+  {t:"自分とまったく違うタイプの人に出会ったら？", o:[
+    "「こういう人も人脈にいたら面白い」","「どうしてこの人はそう考えるんだろう？」","「この人は何を必要としているんだろう？」","「この人と組んだら面白そう！」","「違うからこそ長く付き合えるかもしれない」"]},
+  {t:"あなたにとって「良い人脈」とは？", o:[
+    "必要な人と必要なときにつながれること","お互いを理解し合えること","困ったときに助け合えること","一緒に新しいものを生み出せること","時間をかけて信頼を積み重ねられること"]},
+  {t:"交流会が終わったあと、一番やりそうなのは？", o:[
+    "「あの人とあの人、合いそうだな」と誰かをつなぐ","「もっと話したかったな」と思った人に連絡する","「これ役立つかも」と情報を送る","「一緒にこんなことできそう」とアイデアを考える","「また会いましょう」と次の予定を作る"]},
+];
+
+/* 20武将。MAIN×SUB の組み合わせで判定、stats は [戦略力, 決断力, カリスマ, 策略性, 忍耐力] */
+const BUSHO = [
+  {id:"hideyoshi", name:"豊臣秀吉", read:"TOYOTOMI HIDEYOSHI", title:"人たらしの天下人", main:"CON", sub:"SUP", stats:[4,5,5,4,3],
+   omote:"人たらしの天才",
+   desc:"初対面でも相手の懐にすっと入り、気づけば味方を増やしている。人の長所を見つけ、人と人をつなぐことで、大きな流れをつくっていくタイプです。",
+   ura:"気づいたら、あなたの周りの人間関係が全部“秀吉ネットワーク”になっています。",
+   ura2:"人に好かれるのが得意。\nただし、好かれすぎて「断れない人」まで集めてしまう危険あり。\n\nあなたが「お願いがあるんだけど……」と言った瞬間、\nなぜか周囲がザワつきます。",
+   skill:"人たらし", skillD:"初対面でも距離を縮め、気づけば味方を増やしている。",
+   weak:"人を巻き込みすぎる", weakD:"自分では「ちょっとお願いしただけ」のつもり。\n相手からすると、\n「いつの間にかプロジェクトメンバーになってた。」"},
+  {id:"ieyasu", name:"徳川家康", read:"TOKUGAWA IEYASU", title:"鳴くまで待つ天下人", main:"BUI", sub:"LIS", stats:[5,2,4,4,5],
+   omote:"最後に勝つ長期戦略家",
+   desc:"目先の勝ち負けより、10年後の関係を見ている人。信頼を一枚ずつ積み重ね、最後には誰よりも大きな輪をつくります。",
+   ura:"待てる男。ただし、待ちすぎて周囲からは「まだ動かんの？」と思われています。",
+   ura2:"石橋を叩く。\nもう一度叩く。\n念のため専門家にも叩いてもらう。\n\nそして渡る頃には、橋を作った人が帰っています。",
+   skill:"天下泰平", skillD:"一度築いた信頼は、何があっても崩れない。長く付き合うほど価値が増す人脈を持つ。",
+   weak:"初動が慎重すぎる", weakD:"「検討します」が本当に検討中なのか、周囲には判別できない。\n気づけば、話を持ってきた人が別の人と組んでいる。"},
+  {id:"nobunaga", name:"織田信長", read:"ODA NOBUNAGA", title:"常識破りの革命児", main:"CRE", sub:"CON", stats:[4,5,5,3,1],
+   omote:"常識を壊す革命児",
+   desc:"「前例がない」は、あなたにとって「やる理由」。新しい組み合わせ、新しいやり方を次々と持ち込み、場の空気ごと変えてしまいます。",
+   ura:"あなたの『それ、意味ある？』で、会議が3回くらい凍ります。",
+   ura2:"新しいものを作るのは得意。\nただし、自分には普通に見えていることが、\n周囲には「それ、革命です」と言われることも。",
+   skill:"楽市楽座", skillD:"古い慣習を取り払い、誰でも参加できる新しい場をつくってしまう。",
+   weak:"速すぎる", weakD:"あなたの頭の中では、もう次の次の話。\n周囲はまだ、前回の話を咀嚼しています。"},
+  {id:"shingen", name:"武田信玄", read:"TAKEDA SHINGEN", title:"甲斐の虎", main:"BUI", sub:"SUP", stats:[5,4,4,3,4],
+   omote:"人と組織を動かす統率者",
+   desc:"人は城、人は石垣。チーム一人ひとりの持ち味を把握し、適材適所で力を引き出す。あなたがいる組織は、なぜか強い。",
+   ura:"チームワークを大切にするあまり、気づけば全員の動きを把握しています。",
+   ura2:"「任せる」と言いながら、\n進捗確認だけはしっかり来ます。",
+   skill:"風林火山", skillD:"動くとき、待つときを見極めて、チーム全体のリズムをつくる。",
+   weak:"全部見えている", weakD:"メンバーの予定、得意なこと、最近の悩みまで把握済み。\n頼もしい反面、少しだけ「見られている」緊張感も。"},
+  {id:"kenshin", name:"上杉謙信", read:"UESUGI KENSHIN", title:"義を貫く越後の龍", main:"SUP", sub:"BUI", stats:[3,5,5,1,4],
+   omote:"義理と信頼を重んじる武将",
+   desc:"損得ではなく「筋が通っているか」で動く人。困っている人がいれば立場に関係なく手を差し伸べる。その誠実さが、静かに人を惹きつけます。",
+   ura:"筋が通っていない話をすると、あなたの中の謙信が静かに立ち上がります。",
+   ura2:"普段は穏やか。\nでも「それ、約束と違いません？」の一言が強い。",
+   skill:"敵に塩を送る", skillD:"立場を越えて相手を助け、ライバルすら味方にしてしまう。",
+   weak:"義の基準が高い", weakD:"自分が守っている約束は、相手も守るものだと思っている。\nだから「なんとなく」の反故に、人一倍がっかりする。"},
+  {id:"masamune", name:"伊達政宗", read:"DATE MASAMUNE", title:"遅れてきた独眼竜", main:"CON", sub:"CRE", stats:[4,5,5,4,2],
+   omote:"独創的なアイデアマン",
+   desc:"誰も見ていない角度から物事を見て、「これ面白くない？」を形にしてしまう人。センスと行動力で、場の注目を一気に集めます。",
+   ura:"まだ誰も思いついていないことを思いつく。ただし、誰にも相談せず始めている。",
+   ura2:"「面白そうだからやってみた」\n\nその一言で周囲が忙しくなるタイプ。",
+   skill:"伊達者", skillD:"独自の演出とセンスで、一度会ったら忘れられない存在になる。",
+   weak:"事後報告", weakD:"相談より先に、着手。報告より先に、完成。\n周囲は「聞いてない」と言いながら、結局ちょっと楽しんでいる。"},
+  {id:"masayuki", name:"真田昌幸", read:"SANADA MASAYUKI", title:"表裏比興の者", main:"CRE", sub:"LIS", stats:[5,4,3,5,3],
+   omote:"状況を読み、奇策を生む知略家",
+   desc:"場の空気や人の思惑を読み取り、そこから誰も思いつかない一手をひねり出す人。少ない力で大きな相手を動かす、発想の策士です。",
+   ura:"あなたが黙っているとき、周囲は「何か考えてる……」と警戒します。",
+   ura2:"そして実際、だいたい何か企んでいる。\nただし本人いわく、\n「ちょっと面白いことを思いついただけ」。",
+   skill:"表裏比興", skillD:"相手の思惑を読み切り、予想の裏をかく一手で形勢を変える。",
+   weak:"深読みしすぎ", weakD:"相手の何気ない一言にも、三つくらい裏の意味を読んでしまう。\nたまに、本当にただの雑談です。"},
+  {id:"kanbei", name:"黒田官兵衛", read:"KURODA KANBEI", title:"天下を描く軍師", main:"CON", sub:"LIS", stats:[5,4,3,5,3],
+   omote:"先を読む軍師",
+   desc:"相手の話を聞きながら、その先の展開を何通りも描いている人。必要な人に必要な情報を届け、物事を最短ルートで前に進めます。",
+   ura:"あなたの頭の中では、すでに会議が3回終わっています。",
+   ura2:"周囲が「どうしよう？」と考えている頃、\nあなたはすでに「では次にこうしましょう」と言っている。",
+   skill:"先読みの軍配", skillD:"相談された瞬間に、ゴールまでの道筋と、必要な人の顔が浮かぶ。",
+   weak:"答えを先に言いすぎる", weakD:"相手が自分で気づく前に、正解を言ってしまう。\n「それ、今言おうと思ってたのに」と思われていることも。"},
+  {id:"hanbei", name:"竹中半兵衛", read:"TAKENAKA HANBEI", title:"今孔明", main:"LIS", sub:"CRE", stats:[5,3,3,4,4],
+   omote:"静かな知略家",
+   desc:"多くを語らず、よく聞き、よく見ている。だからこそ、たまに発する一言が核心を突き、場の流れをがらりと変えます。",
+   ura:"口数は少ないのに、たまに一言で全部持っていきます。",
+   ura2:"そして本人は、\n「普通に考えたらそうですよね？」\n\nと言う。",
+   skill:"一言の軍略", skillD:"少ない言葉と少ない手数で、大きな成果を生み出す。",
+   weak:"欲がなさすぎる", weakD:"手柄を人に譲りがち。\n「それ考えたの、あなたですよね？」と周囲の方が悔しがっている。"},
+  {id:"yukimura", name:"真田幸村", read:"SANADA YUKIMURA", title:"日本一の兵", main:"SUP", sub:"CRE", stats:[4,5,5,3,3],
+   omote:"心で人を動かすカリスマリーダー",
+   desc:"信頼と覚悟で人を惹きつけ、共に戦う人。仲間を守るためなら、誰も考えなかった策までひねり出し、「この人となら」と思わせます。",
+   ura:"仲間のためなら、誰も思いつかない無茶な策を出してくる。",
+   ura2:"そして本人だけが\n『まあ、なんとかなるでしょう』と思っています。",
+   skill:"真田丸", skillD:"不利な状況でも、仲間のために新しい一手をつくり出し、戦況をひっくり返す。",
+   weak:"背負いすぎる", weakD:"不利な戦いほど燃える。\n周囲が止めても、「ここが見せ場です」と前に出てしまう。"},
+  {id:"mitsunari", name:"石田三成", read:"ISHIDA MITSUNARI", title:"天下の算盤", main:"BUI", sub:"CRE", stats:[4,4,2,4,4],
+   omote:"新しい仕組みをつくる実務派",
+   desc:"段取り、数字、ルール。バラバラだったものを新しい仕組みに組み直し、誰がやっても回る形にできる人。あなたが入ると、チームの“当たり前”が一段上がります。",
+   ura:"「もっと効率よくできますよね？」の一言で、明日から全員のやり方が変わります。",
+   ura2:"間違っていない。\nだからこそ、ちょっと怖い。",
+   skill:"太閤検地", skillD:"曖昧だったものを測り直し、誰もが納得できる新しいルールをつくる。",
+   weak:"正しさで押し切る", weakD:"間違っていない。でも、相手の「気持ち」の計算がたまに抜け落ちる。\n正論は、言い方ひとつで味方にも敵にもなります。"},
+  {id:"mitsuhide", name:"明智光秀", read:"AKECHI MITSUHIDE", title:"教養の知将", main:"LIS", sub:"CON", stats:[4,3,3,4,5],
+   omote:"分析力と調整力に優れた知将",
+   desc:"相手の立場を理解し、対立する意見の落としどころを見つけられる人。調整役として、組織になくてはならない存在です。",
+   ura:"ずっと我慢しているように見えるけど、あなたの“静かな限界”には誰も気づいていません。",
+   ura2:"「大丈夫です」\n\nこの言葉を信用しすぎると危険です。",
+   skill:"両論併記", skillD:"対立する双方の言い分を理解し、誰もが納得できる着地点を見つける。",
+   weak:"溜め込みすぎる", weakD:"不満を口にしないのは、大人の対応。\nでも、溜まったものはある日まとめて出ます。\n周囲には、それが「突然」に見えています。"},
+  {id:"motonari", name:"毛利元就", read:"MORI MOTONARI", title:"三本の矢の謀将", main:"CON", sub:"BUI", stats:[5,3,3,5,4],
+   omote:"人を読み、つなぎ、動かす外交型",
+   desc:"人を見て、つなぎ、それぞれが力を発揮できる配置を考える人。一本では折れる矢も、あなたが束ねれば折れません。",
+   ura:"あなた、人間関係を将棋盤みたいに見てません？",
+   ura2:"本人は自然にやっている。\n周囲から見ると、かなり高度な人間関係操作。",
+   skill:"三本の矢", skillD:"個々の力を束ねて、一人では届かない成果を生み出す。",
+   weak:"根回しが見えすぎる", weakD:"本人は気配りのつもり。\n周囲は「全部、元就さんの読み通りだったのでは……」と少しざわつく。"},
+  {id:"motochika", name:"長宗我部元親", read:"CHOSOKABE MOTOCHIKA", title:"土佐の出来人", main:"CRE", sub:"BUI", stats:[4,5,4,3,3],
+   omote:"新しい領域を開拓する開拓者",
+   desc:"まだ誰も手をつけていない領域に、最初に旗を立てる人。新しい場所でゼロから仕組みを築き、仲間とともに広げていきます。",
+   ura:"未知の土地を見ると、とりあえず行きたくなる。",
+   ura2:"安定した道を歩いている人を見ると、\n「そっちじゃない道もあるよ」\nと言いたくなる。",
+   skill:"一領具足", skillD:"少人数でも全員が主役になれるチームをつくり、新しい土地を切り拓く。",
+   weak:"安住できない", weakD:"軌道に乗った頃に、次の未開拓地が気になり始める。\n「せっかく落ち着いたのに」と言われがち。"},
+  {id:"yoshihiro", name:"島津義弘", read:"SHIMAZU YOSHIHIRO", title:"鬼島津", main:"CRE", sub:"SUP", stats:[3,5,4,2,5],
+   omote:"奇策で仲間を守る猛将",
+   desc:"仲間を守るためなら、誰も思いつかない手を打てる人。追い込まれた場面ほど発想が冴え、「その手があったか」という一手でチームを救います。",
+   ura:"逃げ道がないなら、敵の真ん中を通ればいい。と本気で思っています。",
+   ura2:"味方を守るためなら、前例のない作戦もためらわない。\nただし、その作戦が仲間に説明されるのは\nだいたい本番の直前です。",
+   skill:"釣り野伏せ", skillD:"一度引いたと見せかけて、ここ一番で形勢をひっくり返す逆転の発想。",
+   weak:"説明が後回し", weakD:"「大丈夫、考えがある」とだけ言って動き出す。\n仲間は信じてついていくけど、内心ずっとドキドキしています。"},
+  {id:"tadakatsu", name:"本多忠勝", read:"HONDA TADAKATSU", title:"戦国最強の守り手", main:"SUP", sub:"CON", stats:[3,5,4,2,5],
+   omote:"圧倒的な信頼と実行力",
+   desc:"言葉より結果で信頼を勝ち取る人。頼まれたことは確実にやり遂げ、しかも涼しい顔をしています。",
+   ura:"言い訳より、とりあえずやる。結果、周囲が「そこまでやる？」となる。",
+   ura2:"自分では普通に仕事をしているだけ。\n周囲から見ると若干チート。",
+   skill:"蜻蛉切", skillD:"どんな無茶振りも、かすり傷ひとつなく成果に変える。",
+   weak:"基準が高すぎる", weakD:"自分の「普通」が、周囲の「全力」。\n悪気なく「これくらいできますよね？」の空気を出してしまう。"},
+  {id:"naomasa", name:"井伊直政", read:"II NAOMASA", title:"井伊の赤鬼", main:"BUI", sub:"CON", stats:[4,5,4,3,2],
+   omote:"先陣を切って人を巻き込む武将",
+   desc:"決めたら即行動。先頭を走りながら必要な人に声をかけ、気づけばチームができている人。交渉の場でも物怖じせず、話をまとめて帰ってきます。",
+   ura:"考えるより先に動く。気づけば、周りの人まで一緒に走っています。",
+   ura2:"周囲：\n「ちょっと待って」\n\nあなた：\n「もう始めました。○○さんも誘っておきました。」",
+   skill:"赤備えの先駆け", skillD:"誰よりも早く動き、その背中で人を集めて、停滞した空気を一気に動かす。",
+   weak:"止まれない", weakD:"「ちょっと待って」が聞こえる頃には、もう三歩先。\n走りながら声をかけるので、後ろには「よく分からないけど来た人」が増えていきます。"},
+  {id:"muneshige", name:"立花宗茂", read:"TACHIBANA MUNESHIGE", title:"西国無双", main:"SUP", sub:"LIS", stats:[4,4,5,2,4],
+   omote:"人格と実力を兼ね備えた信頼型",
+   desc:"実力がありながら驕らず、誰に対しても誠実。かつて対立した相手からも慕われる、稀有な信頼を集める人です。",
+   ura:"完璧に見えるので、周囲が勝手に期待値を上げていきます。",
+   ura2:"本人：\n「そこまで期待されても……」\n\n周囲：\n「宗茂なら大丈夫。」",
+   skill:"無双の人望", skillD:"一度対立した相手とすら、最後には信頼関係を築いてしまう。",
+   weak:"期待値インフレ", weakD:"一度成功すると、次はもっと上を期待される。\n本人だけが、毎回わりと必死です。"},
+  {id:"kanetsugu", name:"直江兼続", read:"NAOE KANETSUGU", title:"愛を掲げる名参謀", main:"LIS", sub:"SUP", stats:[4,4,4,4,3],
+   omote:"忠義と知性を兼ね備えた参謀型",
+   desc:"相手の考えを深く理解した上で、筋の通った意見を真っ直ぐに伝えられる人。主にも仲間にも誠実で、言葉に重みがあります。",
+   ura:"理屈も正しい。信念も強い。つまり、説得力が強すぎて逃げ道がない。",
+   ura2:"「私はこう思います」\n\nが、\n\n「あなたもこう思いますよね？」\n\nに聞こえることがあります。",
+   skill:"直江状", skillD:"理路整然とした言葉で、相手が誰であっても信念を伝え切る。",
+   weak:"正論の長文", weakD:"伝えたいことが多すぎて、メッセージが巻物になる。\n相手は今、返信の言葉を探しています。"},
+  {id:"kagetsuna", name:"片倉景綱", read:"KATAKURA KAGETSUNA", title:"独眼竜の右目", main:"LIS", sub:"BUI", stats:[4,3,3,4,5],
+   omote:"主君を支える最強の右腕",
+   desc:"相手が何を必要としているかを誰よりも早く察し、先回りして支える人。主役を輝かせることに、心からやりがいを感じます。",
+   ura:"人を支えるのが得意すぎて、自分のことを後回しにしがち。",
+   ura2:"気づけば、\n「自分の仕事」より「誰かの相談」が増えています。",
+   skill:"竜の右目", skillD:"相手の考えを深く理解し、言われる前に必要なことを整えておく。",
+   weak:"自分は後回し", weakD:"人の相談には即レス。自分の予定はいつも最後。\nあなたにも、あなたの景綱が必要です。"},
+];
+const byId = Object.fromEntries(BUSHO.map(b => [b.id, b]));
+
+/* 相性のいい属性 */
+const PARTNER = {
+  CON:{to:"BUI", why:"あなたが人を集め、\n相手がその関係を形にしていくから。"},
+  LIS:{to:"CON", why:"あなたが見抜いた人の価値を、\n相手が必要な場所へ届けてくれるから。"},
+  SUP:{to:"LIS", why:"あなたが走り出す前に、\n相手が「本当に必要なこと」を見極めてくれるから。"},
+  CRE:{to:"SUP", why:"あなたが生み出したアイデアを、\n相手が実現するまで支え抜いてくれるから。"},
+  BUI:{to:"CRE", why:"あなたが育てた組織や関係に、\n相手が新しい風を吹き込んでくれるから。"},
+};
+
+/* ---------- state ---------- */
+const $ = id => document.getElementById(id);
+const ans = Array(Q.length).fill(null);
+let order = Q.map(() => shuffle([0,1,2,3,4]));
+let idx = 0, locked = false, current = null, lastScores = null;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)); window.scrollTo(0,0)}
+function toast(msg){const t=$("toast"); t.textContent=msg; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),1800)}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const within = (p, ms) => Promise.race([p, sleep(ms)]).catch(() => {}); // 読み込み待ちで固まらないように
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- quiz ---------- */
+$("start").onclick = () => { idx = 0; render(); show("s-quiz"); };
+
+function render(){
+  const q = Q[idx];
+  $("qn").textContent = String(idx+1).padStart(2,"0");
+  $("dots").innerHTML = Q.map((_,i) => `<i class="${i<idx?"done":i===idx?"now":""}"></i>`).join("");
+  $("qtext").innerHTML = q.quote ? `${esc(q.t)}<span class="quote">${esc(q.quote)}</span>${esc(q.t2)}` : esc(q.t);
+  $("opts").innerHTML = order[idx].map((oi, pos) =>
+    `<button type="button" class="opt${ans[idx]===oi?" sel":""}" data-i="${oi}"><span class="k">${"ABCDE"[pos]}</span><span>${esc(q.o[oi])}</span></button>`
+  ).join("");
+  $("opts").querySelectorAll(".opt").forEach(b => b.onclick = () => pick(+b.dataset.i, b));
+  $("back").style.visibility = idx === 0 ? "hidden" : "visible";
+  locked = false;
+}
+
+async function pick(i, el){
+  if (locked) return;
+  locked = true;
+  ans[idx] = i;
+  $("opts").querySelectorAll(".opt").forEach(b => b.classList.toggle("sel", b === el));
+  const ack = $("ack");
+  ack.textContent = idx === Q.length-1 ? "軍議終了。" : "その選択、承りました。";
+  ack.classList.add("on");
+  await sleep(650);
+  ack.classList.remove("on");
+  if (idx === Q.length-1) return summon();
+  idx++; render(); window.scrollTo(0,0);
+}
+$("back").onclick = () => { if (idx > 0 && !locked){ idx--; render(); } };
+
+/* ---------- scoring ---------- */
+function judge(){
+  const cnt = {CON:0,LIS:0,SUP:0,CRE:0,BUI:0};
+  ans.forEach(i => cnt[ATTRS[i]]++);
+  // 同点時：Q7（一番大切なもの）→ 後半の回答ほど優先 → 回答から決まる順番。
+  // 特定の属性が有利にならないようにして、20武将がまんべんなく出るようにしている
+  const tb = ATTRS[ans[6]];
+  const lastAt = k => ans.lastIndexOf(ATTRS.indexOf(k));
+  const rot = ans.reduce((t, i) => t + i, 0) % 5;
+  const fallback = k => (ATTRS.indexOf(k) + rot) % 5;
+  const rank = ATTRS.slice().sort((a,b) => cnt[b]-cnt[a] || (b===tb)-(a===tb) || lastAt(b)-lastAt(a) || fallback(a)-fallback(b));
+  const [m, s] = rank;
+  // MAIN×SUB の20通りに、武将を1人ずつ割り当てている
+  const busho = BUSHO.find(b => b.main===m && b.sub===s);
+  return {cnt, rank, main:m, sub:s, busho};
+}
+
+/* ---------- summon ---------- */
+async function summon(){
+  const r = judge();
+  lastScores = r; current = r.busho;
+  saveLast(r);
+  const pre = new Image(); pre.src = `img/${current.id}.webp`;
+  show("s-summon");
+  const lines = ["軍議終了。","あなたの武将を召喚します……","いざ、天下分け目の判定へ……"];
+  for (const l of lines){
+    const el = $("summon-text"); el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
+    el.textContent = l; await sleep(1150);
+  }
+  await within(pre.decode(), 3000);
+  renderResult(r);
+}
+
+/* ---------- result ---------- */
+function starStr(n){return "★".repeat(n) + `<em>${"★".repeat(5-n)}</em>`}
+
+function renderResult(r){
+  const b = r.busho;
+  $("r-img").src = `img/${b.id}.webp`;
+  $("r-img").alt = `${b.name}「${b.omote}」の武将カード`;
+  $("r-name").textContent = b.name;
+  $("r-read").textContent = b.read;
+  $("r-title").textContent = b.title;
+  $("r-main").textContent = `${A[r.main].ico} ${A[r.main].en}`;
+  $("r-main-ja").textContent = A[r.main].ja;
+  $("r-sub").textContent = `${A[r.sub].ico} ${A[r.sub].en}`;
+  $("r-sub-ja").textContent = A[r.sub].ja;
+  $("r-balance").innerHTML = r.rank.map((k,i) =>
+    `<div class="bal${i===0?" top":""}"><span>${A[k].ico} ${A[k].en}</span><span class="track"><i data-w="${r.cnt[k]*10}"></i></span><span class="pct">${r.cnt[k]*10}%</span></div>`
+  ).join("");
+
+  const max = Math.max(...ATTRS.map(k => r.cnt[k]));
+  const own = ATTRS.map(k => [A[k].stat, Math.max(1, Math.round(r.cnt[k]/max*5))]);
+  const bs = BUSHO_STATS.map((n,i) => [n, b.stats[i]]);
+  $("r-stats").innerHTML =
+    own.map(([n,v]) => `<div class="stat"><span>${n}</span><span class="stars">${starStr(v)}</span></div>`).join("") +
+    `<div class="stats-sub">— 武将固有の能力 —</div>` +
+    bs.map(([n,v]) => `<div class="stat"><span>${n}</span><span class="stars">${starStr(v)}</span></div>`).join("");
+
+  $("r-omote").textContent = `「${b.omote}」`;
+  $("r-desc").textContent = b.desc;
+  $("r-ura").textContent = `「${b.ura}」`;
+  $("r-ura2").textContent = b.ura2;
+  $("r-skill").textContent = `「${b.skill}」`;
+  $("r-skill-d").textContent = b.skillD;
+  $("r-weak").textContent = `「${b.weak}」`;
+  $("r-weak-d").textContent = b.weakD;
+
+  const p = PARTNER[r.main], pa = A[p.to];
+  $("r-partner").innerHTML = `あなたは<b>${A[r.main].en}</b>が強いので、<br><b>${pa.en}タイプ</b>（${pa.ja}）と組むと<br>力を発揮します。`;
+  $("r-why").textContent = p.why;
+  const partners = BUSHO.filter(x => x.main === p.to && x.id !== b.id).slice(0,3);
+  $("r-pgrid").innerHTML = partners.map(x =>
+    `<button class="pcard" data-id="${x.id}"><img src="img/${x.id}.webp" alt="" loading="lazy" decoding="async"><span>${x.name}タイプ</span><small>${esc(x.omote)}</small></button>`
+  ).join("");
+  bindCards($("r-pgrid"));
+
+  $("event").href = EVENT_URL;
+  $("gallery").hidden = true; $("all").hidden = false;
+
+  show("s-result");
+  const f = $("r-frame"); f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop");
+  observeReveal();
+}
+
+function observeReveal(){
+  const els = document.querySelectorAll("#s-result .reveal");
+  els.forEach(e => e.classList.remove("in"));
+  const done = el => {
+    el.classList.add("in");
+    el.querySelectorAll(".track i").forEach(i => i.style.width = i.dataset.w + "%");
+  };
+  if (!("IntersectionObserver" in window)) return els.forEach(done);
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ done(e.target); io.unobserve(e.target); } }), {threshold:.15});
+  els.forEach(e => io.observe(e));
+}
+
+/* ---------- modal / gallery ---------- */
+function openModal(html){ $("m-body").innerHTML = html; $("modal").classList.add("on"); document.body.style.overflow = "hidden"; }
+function closeModal(){ $("modal").classList.remove("on"); document.body.style.overflow = ""; }
+$("m-close").onclick = closeModal;
+$("modal").onclick = e => { if (e.target === $("modal")) closeModal(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+function bindCards(root){
+  root.querySelectorAll(".pcard").forEach(c => c.onclick = () => {
+    const x = byId[c.dataset.id];
+    openModal(`<img src="img/${x.id}.webp" alt="${esc(x.name)}の武将カード"><p class="mt">${esc(x.name)} ／ ${A[x.main].en} × ${A[x.sub].en}</p>`);
+  });
+}
+$("r-frame").onclick = () => openModal(`<img src="img/${current.id}.webp" alt="${esc(current.name)}の武将カード"><p class="mt">長押し（右クリック）で画像を保存できます</p>`);
+
+$("all").onclick = () => {
+  const g = $("gallery");
+  g.innerHTML = BUSHO.map(x => `<button class="pcard" data-id="${x.id}"><img src="img/${x.id}.webp" alt="" loading="lazy" decoding="async"><span>${x.name}</span></button>`).join("");
+  bindCards(g); g.hidden = false; $("all").hidden = true;
+};
+
+/* ---------- share ---------- */
+function shareText(){
+  const b = current, r = lastScores;
+  return `私の交流武将は「${b.name}」でした。\n〜${b.omote}〜\nMAIN：${A[r.main].en} ／ SUB：${A[r.sub].en}\n\n裏の顔：「${b.ura}」\n\n#交流武将診断 #人脈を活かせるビジネス交流会`;
+}
+const pageUrl = () => location.href.split("#")[0];
+
+async function shareImage(){
+  const b = current, r = lastScores;
+  const img = new Image(); img.src = `img/${b.id}.webp`;
+  if (!img.complete) await new Promise((res, rej) => { img.onload = res; img.onerror = rej; setTimeout(rej, 5000); });
+  await within(document.fonts.ready, 1500);
+  const W = img.naturalWidth, H = img.naturalHeight, F = Math.round(W*0.25);
+  const c = document.createElement("canvas"); c.width = W; c.height = H + F;
+  const x = c.getContext("2d");
+  x.drawImage(img, 0, 0, W, H);
+  const g = x.createLinearGradient(0, H, 0, H+F); g.addColorStop(0,"#17130f"); g.addColorStop(1,"#050403");
+  x.fillStyle = g; x.fillRect(0, H, W, F);
+  x.fillStyle = "#c9a45c"; x.fillRect(0, H, W, 6);
+  x.textAlign = "center";
+  const serif = '"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif';
+  x.fillStyle = "#a69a85"; x.font = `600 ${W*0.028}px ${serif}`;
+  x.fillText("あなたが戦国時代に生きていたら、どの武将だった？", W/2, H + F*0.22);
+  x.fillStyle = "#f6efe0"; x.font = `800 ${W*0.05}px ${serif}`;
+  x.fillText(`MAIN ${A[r.main].en}  ×  SUB ${A[r.sub].en}`, W/2, H + F*0.50);
+  x.fillStyle = "#e6c987"; x.font = `700 ${W*0.034}px ${serif}`;
+  x.fillText("交流武将診断 ｜ 人脈を活かせるビジネス交流会", W/2, H + F*0.80);
+  const blob = await new Promise((res, rej) => c.toBlob(bl => bl ? res(bl) : rej(), "image/jpeg", .88));
+  return new File([blob], `kouryu-busho-${b.id}.jpg`, {type:"image/jpeg"});
+}
+
+$("share").onclick = async () => {
+  const text = shareText(), url = pageUrl();
+  let file = null;
+  try { file = await shareImage(); } catch(e) {}
+  try {
+    if (file && navigator.canShare && navigator.canShare({files:[file]})) {
+      await navigator.share({files:[file], text: `${text}\n${url}`}); return;
+    }
+    if (navigator.share) { await navigator.share({title:"交流武将診断", text, url}); return; }
+  } catch(e) { if (e && e.name === "AbortError") return; }
+  // フォールバック：画像とテキストをモーダルで表示
+  const src = file ? URL.createObjectURL(file) : `img/${current.id}.webp`;
+  const x = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  openModal(`<img src="${src}" alt="シェア用の結果カード">
+    <p class="mt">画像を長押し（右クリック）で保存できます</p>
+    <div class="actions">
+      ${file ? `<a class="btn gold-btn" href="${src}" download="${file.name}">画像を保存する</a>` : ""}
+      <button class="btn sub" id="m-copy">結果テキストをコピー</button>
+      <a class="btn sub" href="${x}" target="_blank" rel="noopener">X（Twitter）でシェア</a>
+    </div>`);
+  $("m-copy").onclick = async () => {
+    const t = `${text}\n${url}`;
+    try { await navigator.clipboard.writeText(t); }
+    catch(e){ const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select(); document.execCommand("copy"); a.remove(); }
+    toast("コピーしました");
+  };
+};
+
+/* ---------- 前回の結果（この端末のブラウザにだけ保存） ---------- */
+const LAST_KEY = "kouryu-busho-last";
+function saveLast(r){
+  try { localStorage.setItem(LAST_KEY, JSON.stringify({id:r.busho.id, cnt:r.cnt, rank:r.rank, at:Date.now()})); } catch(e) {}
+}
+function loadLast(){
+  try {
+    const d = JSON.parse(localStorage.getItem(LAST_KEY));
+    if (!d || !byId[d.id] || !Array.isArray(d.rank)) return null;
+    return {cnt:d.cnt, rank:d.rank, main:d.rank[0], sub:d.rank[1], busho:byId[d.id], at:d.at};
+  } catch(e) { return null; }
+}
+function updateLastButton(){
+  const r = loadLast(), b = $("last");
+  if (!r) { b.hidden = true; return; }
+  const dt = new Date(r.at);
+  b.textContent = `前回の結果を見る（${r.busho.name}・${dt.getMonth()+1}/${dt.getDate()}）`;
+  b.hidden = false;
+}
+$("last").onclick = () => {
+  const r = loadLast(); if (!r) return;
+  lastScores = r; current = r.busho;
+  renderResult(r);
+};
+updateLastButton();
+
+/* ---------- retry ---------- */
+$("retry").onclick = () => {
+  ans.fill(null); order = Q.map(() => shuffle([0,1,2,3,4]));
+  updateLastButton();
+  show("s-intro");
+};
+</script>
+</body>
+</html>

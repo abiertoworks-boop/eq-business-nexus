@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KANOE 交流スタイル診断</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f3f3; --surface:#ffffff; --ink:#262626; --muted:#6b6b6b; --line:#dcdcdc;
+  --grad:linear-gradient(180deg,#f5f5f5 0%,#e4e4e4 55%,#cfcfcf 100%);
+  --accent:#c2502e; --accent-soft:#f6e3db; --sel:#fbefe9;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#e4e4e4 var(--grad) fixed;min-height:100vh;color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;margin:0 auto;padding:40px 16px 80px}
+h1,h2,h3{font-family:"Shippori Mincho",serif;font-weight:700;line-height:1.5;margin:0}
+.brand{font-size:13px;letter-spacing:.2em;color:var(--accent);font-weight:700}
+.screen{display:none}
+.screen.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px}
+.lead{color:var(--muted);margin:16px 0 0}
+.btn{appearance:none;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:700;padding:14px 28px;border-radius:999px;cursor:pointer;transition:opacity .2s}
+.btn:hover{opacity:.88}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:24px 0}
+.axes div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted)}
+.axes b{display:block;color:var(--ink);font-size:14px}
+label.field{display:block;font-size:14px;color:var(--muted);margin:20px 0 6px}
+input[type=text]{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.note{font-size:13px;color:var(--muted)}
+
+/* question */
+.progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:20px}
+.q-text{font-size:19px;margin-bottom:6px}
+.q-sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--sel)}
+.opt .mark{flex:none;width:20px;height:20px;border:1.5px solid var(--line);border-radius:50%;margin-top:4px;position:relative}
+.opt.multi .mark{border-radius:5px}
+.opt.sel .mark{border-color:var(--accent);background:var(--accent)}
+.opt.sel .mark::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.nav{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+
+/* result */
+.type-tag{display:inline-block;font-size:12px;letter-spacing:.2em;color:var(--accent);background:var(--accent-soft);padding:4px 12px;border-radius:999px;font-weight:700}
+.type-name{font-size:34px;letter-spacing:.06em;margin:12px 0 0}
+.type-ja{font-size:16px;color:var(--muted);margin:0}
+.section{margin-top:28px}
+.section h3{font-size:17px;margin-bottom:10px}
+.radar{display:block;width:100%;max-width:340px;margin:8px auto 0}
+.radar text{font-family:"Noto Sans JP",sans-serif;font-size:12px;fill:var(--ink)}
+.bars{display:grid;gap:8px;margin-top:12px}
+.bar{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center;font-size:14px}
+.bar .stars{color:var(--accent);letter-spacing:.1em;font-size:15px}
+.bar small{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-size:14px}
+.chip.give{border-color:var(--accent);color:var(--accent)}
+ul.clean{margin:0;padding-left:1.2em}
+ul.clean li{margin:4px 0}
+.hint{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin-top:8px}
+.cycle{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;color:var(--muted);margin-top:8px}
+.cycle span{background:var(--accent-soft);color:var(--ink);padding:3px 10px;border-radius:8px}
+.policy{margin-top:40px;padding-top:28px;border-top:1px solid var(--line)}
+.policy h3{font-size:19px;margin:8px 0 12px}
+.policy p{margin:0 0 12px}
+.policy li{margin:8px 0}
+.policy li b{color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+@media (max-width:480px){
+  .card{padding:22px 18px}
+  .type-name{font-size:28px}
+  .q-text{font-size:17px}
+  .bar{grid-template-columns:84px 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 表紙 -->
+  <section class="screen on" id="s-intro">
+    <p class="brand">KANOE</p>
+    <h1 style="font-size:28px;margin-top:8px">交流スタイル診断</h1>
+    <p class="lead">あなたは、人との関わりの中で、どんな価値を育てる人でしょうか。<br>
+    「良い・悪い」を測るものではありません。<br>
+    ふだんの行動に近いものを、正直に選んでください。</p>
+
+    <div class="axes">
+      <div><b>傾聴</b>相手を知る</div>
+      <div><b>GIVE</b>自分から差し出す</div>
+      <div><b>信頼</b>関係を育てる</div>
+      <div><b>敬意</b>専門性・時間・対価</div>
+      <div><b>共創</b>一緒に育てる</div>
+    </div>
+
+    <div class="card">
+      <p style="margin:0">全15問・約5分</p>
+      <p class="note" style="margin:4px 0 0">理想の自分ではなく、「実際にそうしている」ものを選ぶのがコツです。</p>
+      <label class="field" for="nick">お名前</label>
+      <input type="text" id="nick" maxlength="30" placeholder="例：山田 花子" autocomplete="name">
+      <p class="note" style="margin:10px 0 0">回答と診断結果は、コミュニティ運営のためにKANOE運営事務局へ共有されます。</p>
+      <div class="row" style="margin-top:24px"><button class="btn" id="start" disabled>診断をはじめる</button></div>
+    </div>
+  </section>
+
+  <!-- 設問 -->
+  <section class="screen" id="s-quiz">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="meta"><span id="qnum"></span><span id="qcat"></span></div>
+    <div class="card">
+      <h2 class="q-text" id="qtext"></h2>
+      <p class="q-sub" id="qsub"></p>
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="back">戻る</button>
+      <button class="btn" id="next" disabled>次へ</button>
+    </div>
+  </section>
+
+  <!-- 結果 -->
+  <section class="screen" id="s-result">
+    <p class="brand">KANOE 交流スタイル診断</p>
+    <div class="card" style="margin-top:12px">
+      <span class="type-tag">あなたの交流スタイル</span>
+      <h2 class="type-name" id="r-name"></h2>
+      <p class="type-ja" id="r-ja"></p>
+      <p id="r-desc" style="margin:16px 0 0"></p>
+
+      <div class="section">
+        <h3>関わり方のバランス</h3>
+        <svg class="radar" id="radar" viewBox="0 0 320 300" role="img" aria-label="5つの軸のバランス"></svg>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="section">
+        <h3>あなたの持ち味</h3>
+        <ul class="clean" id="r-strength"></ul>
+      </div>
+
+      <div class="section">
+        <h3>コミュニティに提供できる価値</h3>
+        <div class="chips" id="r-give"></div>
+      </div>
+
+      <div class="section">
+        <h3>あなたが求めている価値</h3>
+        <div class="chips" id="r-want"></div>
+      </div>
+
+      <div class="section">
+        <h3>次に育てたい関わり方</h3>
+        <div class="hint" id="r-grow"></div>
+        <p class="note" style="margin-top:16px">この診断は、今のあなたの関わり方を映す「最初の仮説」です。人との関わりの中で、あなたらしい価値はもっと見つかっていきます。</p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;justify-content:center">
+      <button class="btn" id="copy">結果をコピー</button>
+      <button class="btn ghost" id="retry">もう一度診断する</button>
+    </div>
+
+    <div class="policy">
+      <p class="brand">KANOEの方針</p>
+      <h3>一人ひとりの価値を、信頼でつなぎ、次の仕事へ。</h3>
+      <p>KANOEは、職種や会社規模よりも「他者と関わる姿勢」を大切にするコミュニティです。<br>
+      自分の事業に誠実で、相手を知り、誰かの力になり、専門性への敬意を持ち、場を一緒に育てられる人が集まる場を目指しています。</p>
+      <ul class="clean">
+        <li><b>Give → Grow</b>　相手を知る、必要な人を紹介する、相談に乗る、できることで力を貸す。その積み重ねが、信頼と紹介・協業につながります。</li>
+        <li><b>理由を添えてつなぐ</b>　紹介は、理由を添え、双方の同意を取ってから。</li>
+        <li><b>対価を尊重する</b>　仲間の仕事を無償で消費せず、専門性・時間・対価を大切にします。</li>
+        <li><b>感謝と結果を戻す</b>　紹介や協力で生まれた成果は、感謝とともに本人と場へ戻します。</li>
+      </ul>
+      <div class="cycle"><span>一人ひとりの価値が見つかる</span>→<span>信頼できる相手に伝わる</span>→<span>誰かへの貢献が、次の仕事として返ってくる</span></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+
+<script>
+/* 軸: L=傾聴 G=GIVE T=信頼 R=敬意 C=共創
+   スタイル: CON=CONNECTOR LIS=LISTENER SUP=SUPPORTER BUI=BUILDER CRE=CREATOR */
+const AXES = [
+  {k:"L", name:"傾聴",  en:"LISTEN"},
+  {k:"G", name:"GIVE",  en:"GIVE"},
+  {k:"T", name:"信頼",  en:"TRUST"},
+  {k:"R", name:"敬意",  en:"RESPECT"},
+  {k:"C", name:"共創",  en:"CO-CREATE"}
+];
+
+const Q = [
+  {cat:"傾聴", t:"初対面の人から仕事の話をされたとき、あなたはどうしますか？", o:[
+    ["自分の仕事との共通点を探して話す", {C:1}, {CON:1}],
+    ["自分の経験を話して、会話を広げる", {G:1}, {SUP:1}],
+    ["相手が何をしているのか、質問する", {L:3}, {LIS:2}],
+    ["相手の話を聞きながら、困っていることを探す", {L:3,G:1}, {SUP:1,LIS:1}]
+  ]},
+  {cat:"傾聴", t:"交流会で、話が合いそうな人と出会いました。最初に知りたいのは？", o:[
+    ["何を売っているのか", {L:1}, {}],
+    ["どんな実績があるのか", {L:1,R:1}, {}],
+    ["なぜ、その仕事をしているのか", {L:3,T:1}, {LIS:2}],
+    ["自分に何をしてくれるのか", {}, {}]
+  ]},
+  {cat:"傾聴", t:"自分が話している途中で、相手があまり話していないことに気づいたら？", o:[
+    ["興味がなさそうなので、要点を話し切る", {}, {}],
+    ["相手から質問されるまで話す", {}, {}],
+    ["話の合間に、相手にも質問する", {L:2}, {LIS:1}],
+    ["一度話すのを止めて、相手の話を聞く", {L:3,R:1}, {LIS:1}]
+  ]},
+  {cat:"GIVE", t:"「この人に、自分が知っている人を紹介できそう」と思いました。どうしますか？", o:[
+    ["その場で、すぐに紹介する", {G:2}, {CON:1}],
+    ["自分にもメリットがありそうなら紹介する", {}, {}],
+    ["まず本人に、紹介を望んでいるか確認する", {R:2,T:1}, {CON:1}],
+    ["二人が合いそうか考え、理由を添えて、双方の同意を取ってからつなぐ", {G:3,R:2,T:2}, {CON:3}]
+  ]},
+  {cat:"目的", t:"あなたが交流会に参加する、いちばんの目的は？", o:[
+    ["自分の商品・サービスを知ってもらう", {}, {CRE:1}],
+    ["新しい仕事につながる人を探す", {}, {CON:1}],
+    ["自分の悩みを相談できる人を探す", {C:1}, {BUI:1}],
+    ["自分が役に立てる人や、一緒に成長できる人と出会う", {G:2,C:1}, {SUP:1,BUI:1}],
+    ["いろいろな人の考え方を知りたい", {L:1}, {LIS:1,CRE:1}]
+  ]},
+  {cat:"GIVE", t:"交流会で、目的に合う人とは出会えませんでした。帰り道に考えるのは？", o:[
+    ["今日は収穫がなかった", {}, {}],
+    ["次こそ、目的に合う人を探そう", {}, {}],
+    ["話した人の役に立てることはなかったか", {G:3,T:1}, {SUP:2}],
+    ["話した人と、またどこかで関われそうか", {T:2,C:1}, {CON:1,BUI:1}]
+  ]},
+  {cat:"敬意", t:"知り合った人の得意分野で、ちょっと手伝ってほしいことができました。", o:[
+    ["知り合いなので、無料でお願いする", {}, {}],
+    ["もう少し仲良くなってから、無料でお願いする", {}, {}],
+    ["ちょっとしたことなので、お礼の品くらいでお願いする", {R:1}, {}],
+    ["相手の仕事なので、正式に依頼して対価を払う", {R:3,T:1}, {}],
+    ["まず相手に、どういう形なら受けられるか聞く", {R:2,L:1}, {}]
+  ]},
+  {cat:"共創", t:"自分の事業について悩んでいるとき、あなたは？", o:[
+    ["自分で答えを出す", {}, {}],
+    ["専門家に答えを教えてもらう", {R:1}, {}],
+    ["仲間に相談して、意見をもらう", {C:2}, {BUI:1}],
+    ["仲間と壁打ちしながら、自分で答えを見つける", {C:3,L:1}, {BUI:2}]
+  ]},
+  {cat:"共創", t:"仲間が、まだ形になっていないアイデアを話してくれました。", o:[
+    ["足りない点や、課題を指摘する", {C:1}, {}],
+    ["「自分ならこうする」とアドバイスする", {G:1}, {SUP:1}],
+    ["問いを返して、その人の考えを深める手伝いをする", {C:3,L:2}, {BUI:2,LIS:1}],
+    ["面白がって、広げる案をどんどん出す", {C:2,G:1}, {CRE:3}]
+  ]},
+  {cat:"信頼", t:"交流会で「今度、資料をお送りしますね」と言いました。", o:[
+    ["相手から連絡があれば送る", {}, {}],
+    ["時間ができたときに送る", {T:1}, {}],
+    ["当日か翌日中に送る", {T:3}, {}],
+    ["送るときに、相手に役立ちそうな情報も添える", {T:3,G:2}, {SUP:1}]
+  ]},
+  {cat:"信頼", t:"知り合った人が、今のところ自分の顧客にはなりそうにありません。", o:[
+    ["特に連絡は取らない", {}, {}],
+    ["名刺だけ保管しておく", {T:1}, {}],
+    ["ときどき近況を聞き、関係を続ける", {T:3}, {BUI:1}],
+    ["その人の役に立ちそうな情報や人を思い浮かべる", {T:2,G:2}, {CON:2}]
+  ]},
+  {cat:"信頼", t:"誰かから紹介を受けた相手との仕事が、うまくいきました。", o:[
+    ["紹介してくれた人に報告する", {T:2}, {}],
+    ["紹介してくれた人にお礼を伝える", {T:2}, {}],
+    ["紹介してくれた人に結果と感謝を伝え、場にも共有する", {T:3,G:1,C:1}, {CON:1,BUI:1}],
+    ["自分の仕事なので、特に報告はしない", {}, {}]
+  ]},
+  {cat:"スタイル", t:"あなたが、いちばん自然にできる「力の貸し方」は？", o:[
+    ["人と人をつなぐ", {G:1}, {CON:3}],
+    ["話を聞いて、相手の考えを整理する", {L:1}, {LIS:3}],
+    ["知識や経験を伝える", {G:1}, {SUP:3}],
+    ["一緒に考え、手を動かす", {C:1}, {BUI:3}],
+    ["新しいアイデアや切り口を出す", {C:1}, {CRE:3}]
+  ]},
+  {cat:"提供と期待", multi:true, max:3, key:"give", t:"あなたが、コミュニティに提供できるものは？", sub:"3つまで選べます", o:[
+    "人の紹介・つなぎ","専門知識・スキル","話を聞くこと・相談相手","企画・アイデア","実務の手伝い","場づくり・運営","発信・広報","経験談・失敗談"
+  ]},
+  {cat:"提供と期待", multi:true, max:3, key:"want", t:"あなたが、コミュニティに求めているものは？", sub:"3つまで選べます", o:[
+    "新しい仕事の機会","相談できる相手","協業パートナー","学び・新しい視点","事業の軸の言語化","応援し合える仲間","専門家とのつながり"
+  ]}
+];
+
+const STYLES = {
+  CON:{name:"CONNECTOR", ja:"人と人をつなぐ人",
+    desc:"相手のことを覚えていて、「この人とこの人が会ったら」と自然に思い浮かべる人。あなたのひと言の紹介が、誰かの次の仕事のはじまりになります。",
+    strength:["人の顔と、その人の得意なことを結びつけて覚えている","出会いを、その場かぎりで終わらせない","場全体の関係を広げる力がある"]},
+  LIS:{name:"LISTENER", ja:"相手の話から価値を見つける人",
+    desc:"相手に興味を持ち、問いを重ねながら、その人自身も気づいていない価値を見つける人。あなたと話すと、相手は自分の仕事を少し誇らしく思えます。",
+    strength:["相手が話しやすい空気をつくれる","言葉の奥にある「なぜ」を聞ける","相手の価値を言葉にする手伝いができる"]},
+  SUP:{name:"SUPPORTER", ja:"知識や経験で力を貸す人",
+    desc:"自分の知っていること、経験してきたことを惜しまず差し出せる人。誰かの「困った」に、具体的な助けを届けられます。",
+    strength:["困っている人に、すぐ手を差し伸べられる","経験を、相手に役立つ形で伝えられる","頼られることで、信頼を積み重ねていける"]},
+  BUI:{name:"BUILDER", ja:"一緒に考え、関係を育てる人",
+    desc:"答えを渡すより、一緒に考えることを選ぶ人。壁打ちや共同作業を通じて、関係と事業の両方をじっくり育てていけます。",
+    strength:["未完成の話を、安心して出せる相手になれる","問いを返し合い、相手の答えを引き出せる","長く続く関係と、場そのものを育てられる"]},
+  CRE:{name:"CREATOR", ja:"新しい可能性を生み出す人",
+    desc:"「こうしたら面白いかも」と、まだない形を思い描ける人。あなたのアイデアが、仲間同士の新しい協業のきっかけになります。",
+    strength:["物事を新しい切り口で見られる","場に勢いと楽しさを生み出せる","人と人の組み合わせから、企画を思いつける"]},
+};
+
+const GROW = {
+  L:"話す前に、ひとつ質問を。「なぜ、その仕事をしているんですか？」と聞くことから、相手の本当の価値が見えてきます。",
+  G:"「この人に、自分は何を渡せるだろう」と考える時間を、出会いのたびに少しだけ。情報ひとつ、人ひとりの紹介でも立派なGIVEです。",
+  T:"小さな約束を、早く守ること。そして紹介を受けたら、結果と感謝を本人と場へ戻すこと。信頼はその積み重ねで育ちます。",
+  R:"仲間の仕事を「ちょっとだから」と無償で消費しないこと。専門性・時間・対価を尊重すると、あなたも同じように大切にされます。",
+  C:"答えを一人で出す前に、未完成のまま仲間に話してみる。問いを返し合う中で、一人では出なかった答えが見つかります。"
+};
+
+let idx = 0;
+const ans = Q.map(q => q.multi ? [] : null);
+const order = Q.map(q => q.multi ? q.o.map((_,i)=>i) : shuffle(q.o.map((_,i)=>i)));
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const $ = id => document.getElementById(id);
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo(0,0)}
+
+$("nick").oninput = () => { $("start").disabled = !$("nick").value.trim(); };
+$("start").onclick = () => { idx = 0; render(); show("s-quiz"); };
+
+function render(){
+  const q = Q[idx];
+  $("bar").style.width = (idx / Q.length * 100) + "%";
+  $("qnum").textContent = `Q${idx+1} / ${Q.length}`;
+  $("qcat").textContent = q.cat;
+  $("qtext").textContent = q.t;
+  $("qsub").textContent = q.sub || "いちばん近いものを1つ選んでください";
+  const box = $("opts"); box.innerHTML = "";
+  order[idx].forEach(i => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "opt" + (q.multi ? " multi" : "");
+    const label = q.multi ? q.o[i] : q.o[i][0];
+    b.innerHTML = `<span class="mark"></span><span></span>`;
+    b.lastChild.textContent = label;
+    const selected = q.multi ? ans[idx].includes(i) : ans[idx] === i;
+    if (selected) b.classList.add("sel");
+    b.onclick = () => pick(i);
+    box.appendChild(b);
+  });
+  $("back").style.visibility = idx === 0 ? "hidden" : "visible";
+  $("next").textContent = idx === Q.length - 1 ? "結果を見る" : "次へ";
+  $("next").disabled = q.multi ? ans[idx].length === 0 : ans[idx] === null;
+}
+
+function pick(i){
+  const q = Q[idx];
+  if (q.multi){
+    const a = ans[idx], p = a.indexOf(i);
+    if (p >= 0) a.splice(p,1);
+    else if (a.length < q.max) a.push(i);
+    render();
+  } else {
+    ans[idx] = i;
+    render();
+    setTimeout(() => { if (ans[idx] === i) go(1); }, 260);
+  }
+}
+
+function go(d){
+  if (d > 0 && $("next").disabled) return;
+  if (idx + d >= Q.length) return finish();
+  idx = Math.max(0, idx + d);
+  render();
+}
+$("next").onclick = () => go(1);
+$("back").onclick = () => go(-1);
+
+let lastResult = null;
+
+function finish(){
+  const sc = {L:0,G:0,T:0,R:0,C:0}, mx = {L:0,G:0,T:0,R:0,C:0};
+  const st = {CON:0,LIS:0,SUP:0,BUI:0,CRE:0};
+  Q.forEach((q,qi) => {
+    if (q.multi) return;
+    AXES.forEach(({k}) => mx[k] += Math.max(...q.o.map(o => o[1][k] || 0)));
+    const o = q.o[ans[qi]];
+    for (const k in o[1]) sc[k] += o[1][k];
+    for (const s in o[2]) st[s] += o[2][s];
+  });
+  const pct = {}; AXES.forEach(({k}) => pct[k] = mx[k] ? sc[k] / mx[k] : 0);
+  const stars = p => Math.max(1, Math.min(5, Math.round(p * 5)));
+
+  // スタイル：最多得点。同点なら「力の貸し方」の回答を優先
+  const lastStyle = Object.keys(Q[12].o[ans[12]][2])[0];
+  const style = Object.keys(st).sort((a,b) => st[b]-st[a] || (b===lastStyle) - (a===lastStyle))[0];
+  const S = STYLES[style];
+
+  // 伸びしろ：最も低い軸
+  const low = AXES.map(a=>a.k).sort((a,b) => pct[a]-pct[b])[0];
+  const lowName = AXES.find(a=>a.k===low).name;
+
+  const give = ans[13].map(i => Q[13].o[i]);
+  const want = ans[14].map(i => Q[14].o[i]);
+
+  $("r-name").textContent = S.name;
+  $("r-ja").textContent = S.ja;
+  $("r-desc").textContent = S.desc;
+  $("r-strength").innerHTML = S.strength.map(s => `<li>${s}</li>`).join("");
+  $("r-grow").innerHTML = `<b>${lowName}</b><br>${GROW[low]}`;
+  $("r-give").innerHTML = give.map(g => `<span class="chip give">${g}</span>`).join("");
+  $("r-want").innerHTML = want.map(g => `<span class="chip">${g}</span>`).join("");
+  $("bars").innerHTML = AXES.map(a => {
+    const n = stars(pct[a.k]);
+    return `<div class="bar"><span>${a.name}<br><small>${a.en}</small></span><span class="stars">${"★".repeat(n)}${"☆".repeat(5-n)}</span></div>`;
+  }).join("");
+  drawRadar(pct);
+
+  const nick = $("nick").value.trim();
+  lastResult = [
+    "【KANOE 交流スタイル診断】",
+    nick ? `お名前：${nick}` : null,
+    `交流スタイル：${S.name}（${S.ja}）`,
+    ...AXES.map(a => { const n = stars(pct[a.k]); return `${a.name === a.en ? a.name : a.name + "（" + a.en + "）"}：${"★".repeat(n)}${"☆".repeat(5-n)}`; }),
+    `提供できる価値：${give.join("、")}`,
+    `求めている価値：${want.join("、")}`,
+    `次に育てたい軸：${lowName}`
+  ].filter(Boolean).join("\n");
+
+  $("bar").style.width = "100%";
+  show("s-result");
+
+  send({
+    v: VERSION, name: nick, style,
+    scores: Object.fromEntries(AXES.map(a => [a.k, Math.round(pct[a.k]*100)])),
+    answers: Q.map((q,qi) => q.multi ? null : {q: qi, i: ans[qi], qt: q.t, text: q.o[ans[qi]][0]}).filter(Boolean),
+    give, want
+  });
+}
+
+// 回答の送信先（Google Apps Script のウェブアプリURL）。空なら送信しない
+const ENDPOINT = "";
+const VERSION = 2;
+let sent = false;
+function send(data){
+  if (!ENDPOINT || sent) return;
+  sent = true;
+  fetch(ENDPOINT, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(data)})
+    .catch(() => { sent = false; });
+}
+
+function drawRadar(pct){
+  const cx=160, cy=150, R=105, n=AXES.length;
+  const pt = (i, r) => { const a = -Math.PI/2 + i*2*Math.PI/n; return [cx + r*Math.cos(a), cy + r*Math.sin(a)]; };
+  let s = "";
+  [0.2,0.4,0.6,0.8,1].forEach(f => {
+    s += `<polygon points="${AXES.map((_,i)=>pt(i,R*f).join(",")).join(" ")}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
+  });
+  AXES.forEach((a,i) => {
+    const [x,y] = pt(i,R); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--line)"/>`;
+    const [lx,ly] = pt(i,R+22);
+    s += `<text x="${lx}" y="${ly+4}" text-anchor="middle">${a.name}</text>`;
+  });
+  const poly = AXES.map((a,i)=>pt(i,R*Math.max(.06,pct[a.k])).join(",")).join(" ");
+  s += `<polygon points="${poly}" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+  AXES.forEach((a,i)=>{ const [x,y]=pt(i,R*Math.max(.06,pct[a.k])); s += `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--accent)"/>`; });
+  $("radar").innerHTML = s;
+}
+
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText(lastResult); }
+  catch(e){ const t=document.createElement("textarea"); t.value=lastResult; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); }
+  $("toast").classList.add("on"); setTimeout(()=>$("toast").classList.remove("on"),1600);
+};
+$("retry").onclick = () => {
+  sent = false;
+  ans.forEach((_,i)=> ans[i] = Q[i].multi ? [] : null);
+  Q.forEach((q,i)=>{ if(!q.multi) order[i] = shuffle(q.o.map((_,j)=>j)); });
+  show("s-intro");
+};
+</script>
+</body>
+</html>
