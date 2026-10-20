@@ -5,6 +5,7 @@
   var MAIL = 'info@brifu.co.jp';
   var BODY = encodeURIComponent('会社名・団体名：\nお名前：\nご連絡先：\nご相談内容（分かる範囲で）：\n');
   var CTA = {
+    no2:       'mailto:' + MAIL + '?subject=' + encodeURIComponent('【No.2育成】EQ Business Nexus') + '&body=' + BODY,
     consult:   'mailto:' + MAIL + '?subject=' + encodeURIComponent('【個別相談】EQ Business Nexus') + '&body=' + BODY,
     corporate: 'mailto:' + MAIL + '?subject=' + encodeURIComponent('【企業・組織】EQ Business Nexus の活用相談') + '&body=' + BODY,
     inquiry:   'mailto:' + MAIL + '?subject=' + encodeURIComponent('【お問い合わせ】EQ Business Nexus') + '&body=' + BODY
