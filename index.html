@@ -3,18 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EQ Business Nexus｜EQを、ビジネスの力へ。</title>
-<meta name="description" content="EQ Business Nexusは、EQ・EQ認識理論を活かし、事業・商品・サービス・組織・人材育成・理念などを設計し、実装まで伴走するビジネスコンサルティングです。">
+<title>EQ Business Nexus｜No.2が育たない会社は、トップの限界で止まる。</title>
+<meta name="description" content="EQ Business Nexusは、EQ・EQ認識理論を活かし、経営者の右腕となるNo.2の育成から、事業・商品・組織・理念づくりまで、実装に伴走するビジネスコンサルティングです。">
 <!--
-  文章の出典：EQ Business Nexus LP原案
+  文章の出典：EQ Business Nexus LP原案／No.2育成の追加原稿（2026-10-20）
   実績数値・事例・価格・期間は原案にないため載せない
+  動き：GSAP + ScrollTrigger + Lenis + Three.js（CDNが読めなくても内容は表示される）
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+
+<!-- 画面に固定した3DのEQ（スクロールで現れる） -->
+<canvas class="eq3d" aria-hidden="true"></canvas>
 
 <header class="site-header" id="top">
   <div class="header-inner">
@@ -35,187 +40,233 @@
 
 <main>
 
-  <!-- 1. FIRST VIEW -->
-  <section class="hero">
-    <img class="hero-bg" src="images/hero.jpg" alt="">
+  <!-- 1. HERO：3本の動画が切り替わる -->
+  <section class="hero" data-theme="dark" data-eq="hide">
+    <div class="hero-media">
+      <video class="hero-video is-on" src="video/hero-1.mp4" poster="images/poster-hero-1.jpg" muted playsinline preload="auto"></video>
+      <video class="hero-video" src="video/hero-2.mp4" poster="images/poster-hero-2.jpg" muted playsinline preload="metadata"></video>
+      <video class="hero-video" src="video/hero-3.mp4" poster="images/poster-hero-3.jpg" muted playsinline preload="metadata"></video>
+    </div>
     <div class="hero-inner">
-      <p class="label label-light">EQ BUSINESS NEXUS</p>
-      <h1 class="hero-h1">No.2が<br class="sp">育たない会社は、<br>トップの限界で<br class="sp">止まる。</h1>
-      <p class="hero-sub">経営者の右腕となり、自ら判断して組織を動かす<br class="pc">No.2を、<br class="sp">EQで育てる。</p>
-      <p class="hero-lead">EQ・EQ認識理論の視点とビジネス設計を組み合わせ、<br class="pc">No.2・右腕人材の育成から、事業・商品・組織・理念づくりまで、実装に伴走します。</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" data-cta="no2" href="#contact">No.2育成について相談する</a>
-        <a class="btn btn-outline-light" href="#why-no2">なぜNo.2が必要なのか</a>
+      <p class="hero-kicker">EQ Business Nexus</p>
+      <div class="hero-display" aria-hidden="true">
+        <span class="hd-line hd-1">Build</span>
+        <span class="hd-line hd-2">the Right</span>
+        <span class="hd-line hd-3">Hand.</span>
       </div>
-      <p class="hero-note">支援内容・期間・回数・料金は、ご相談内容に合わせてご提案します。</p>
+      <div class="hero-copy">
+        <h1 class="kin">No.2が<br class="sp">育たない会社は、<br>トップの限界で<br class="sp">止まる。</h1>
+        <p class="hero-sub">経営者の右腕となり、自ら判断して組織を動かすNo.2を、EQで育てる。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" data-cta="no2" href="#contact">No.2育成について相談する</a>
+          <a class="btn btn-ghost" href="#why-no2">なぜNo.2が必要なのか</a>
+        </div>
+      </div>
+      <p class="hero-count"><span class="hc-now">01</span> / 03</p>
+      <p class="hero-scroll">Scroll</p>
     </div>
   </section>
 
-  <!-- 2. ISSUES -->
-  <section class="section" id="issues">
-    <div class="wrap narrow">
-      <p class="label">Issues</p>
-      <h2>その悩み、<br>右腕がいないことから<br class="sp">来ていませんか。</h2>
-      <ol class="issue-list reveal">
-        <li><span class="num">01</span>現場の判断まで、すべて自分が抱えている</li>
-        <li><span class="num">02</span>任せたいのに、任せられる人がいない</li>
-        <li><span class="num">03</span>指示を待つ社員が多く、自分から動く人が育たない</li>
-        <li><span class="num">04</span>トップの思いが、現場まで届かない</li>
-        <li><span class="num">05</span>事業の次の一手を考える時間がない</li>
+  <!-- 2. STATEMENT：巨大なEQが奥から現れる -->
+  <section class="statement" data-theme="dark" data-eq="intro">
+    <div class="statement-pin">
+      <div class="statement-text">
+        <p class="statement-en">Growth begins with No.2.</p>
+        <p class="statement-ja">会社の成長は、右腕から始まる。</p>
+        <p class="statement-lead">会社が小さいうちは、トップが判断し、動けば回ります。<br class="pc">けれど人が増え、事業が広がるほど、トップ一人で抱えられる量には限界が来ます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ISSUES：スクロールで1行ずつ灯る -->
+  <section class="issues" id="issues" data-theme="dark" data-eq="right">
+    <div class="wrap issues-grid">
+      <div class="issues-head">
+        <p class="label">Issues</p>
+        <h2 class="kin">その悩み、<br>右腕がいないことから<br>来ていませんか。</h2>
+      </div>
+      <ol class="issue-lines">
+        <li><span>01</span>現場の判断まで、すべて自分が抱えている</li>
+        <li><span>02</span>任せたいのに、任せられる人がいない</li>
+        <li><span>03</span>指示を待つ社員が多く、自分から動く人が育たない</li>
+        <li><span>04</span>トップの思いが、現場まで届かない</li>
+        <li><span>05</span>事業の次の一手を考える時間がない</li>
       </ol>
     </div>
   </section>
 
-  <!-- 2-2. WHY NO.2 -->
-  <section class="section section-gray" id="why-no2">
+  <!-- 4. WHY No.2：横に流れる4つの理由 -->
+  <section class="why" id="why-no2" data-theme="light" data-eq="left">
     <div class="wrap">
+      <p class="mega" aria-hidden="true">Why No.2</p>
       <div class="sec-head">
         <p class="label">Why No.2</p>
-        <h2>なぜ、No.2を<br>育てなければ<br class="sp">ならないのか。</h2>
-        <p class="sec-lead">会社が小さいうちは、トップが判断し、動けば回ります。<br class="pc">けれど人が増え、事業が広がるほど、トップ一人で抱えられる量には限界が来ます。</p>
+        <h2 class="kin">なぜ、No.2を<br>育てなければ<br class="sp">ならないのか。</h2>
       </div>
-      <div class="why-grid">
-        <div class="why-item reveal">
+    </div>
+    <div class="why-pin">
+      <div class="why-track">
+        <article class="why-card">
+          <figure><img src="images/m-flow.jpg" alt="複雑な判断の流れ図の前に立つ経営者" loading="lazy"></figure>
           <span class="why-num">01</span>
           <h3>会社の成長が、<br>トップの時間で止まる。</h3>
           <p>すべての判断がトップを通る組織では、会社のスピードはトップ一人の処理量を超えられません。</p>
-        </div>
-        <div class="why-item reveal">
+        </article>
+        <article class="why-card">
+          <figure><img src="images/m-people.jpg" alt="同じ向きに並ぶ人形の中で、ひとつだけ色の違う人形" loading="lazy"></figure>
           <span class="why-num">02</span>
           <h3>現場が、<br>判断しない組織になる。</h3>
           <p>決めるのがいつもトップなら、現場は指示を待つようになります。人は、任されたときに育ちます。</p>
-        </div>
-        <div class="why-item reveal">
+        </article>
+        <article class="why-card">
+          <figure><img src="images/approach.jpg" alt="テーブルを囲んで話し合う人たち" loading="lazy"></figure>
           <span class="why-num">03</span>
           <h3>思いと現場の声が、<br>すれ違う。</h3>
           <p>トップの思いを現場の言葉にし、現場の声を経営へ届ける人がいないと、理念は言葉のまま止まります。</p>
-        </div>
-        <div class="why-item reveal">
+        </article>
+        <article class="why-card">
+          <figure><img src="images/m-chess.jpg" alt="次の一手を指すチェスの駒" loading="lazy"></figure>
           <span class="why-num">04</span>
           <h3>経営者が、<br>未来の仕事に向かえない。</h3>
           <p>新しい事業、次の打ち手、次世代への継承。経営者にしかできない仕事に時間を使うために、右腕が必要です。</p>
+        </article>
+      </div>
+    </div>
+    <div class="wrap">
+      <p class="why-catch words">No.2の育成は、<br class="sp">人事の課題ではなく、<br><em>経営の課題</em>です。</p>
+    </div>
+  </section>
+
+  <!-- 5. OUR VIEW：動画を背景に、考え方を読む -->
+  <section class="view" data-theme="dark" data-eq="far">
+    <div class="view-bg">
+      <video src="video/city.mp4" poster="images/poster-city.jpg" muted loop playsinline preload="none"></video>
+    </div>
+    <div class="view-body">
+      <div class="wrap">
+        <div class="view-head">
+          <p class="label">Our View</p>
+          <h2 class="kin">No.2は、<br>トップの<br class="sp">コピーではない。</h2>
+          <blockquote class="view-quote">人は仕組みや指示だけでは動かない。<br>気持ちを理解され、受け止められたときに、<br class="pc">自分から動き出す。</blockquote>
+          <p>私たちは、感情と関係性を土台に、メンバーが自ら責任を持って進む組織を目指しています。<br class="pc">この考えをNo.2に当てはめると、No.2は、トップの指示を伝えるだけの人ではありません。</p>
         </div>
+
+        <div class="trio" aria-label="トップと現場をつなぐNo.2">
+          <div class="trio-item"><p class="trio-en">Top</p><p>トップの思いを<br>理解する</p></div>
+          <div class="trio-item is-core"><p class="trio-en">No.2</p><p>双方をつなぎ、<br>自分で判断して動く</p></div>
+          <div class="trio-item"><p class="trio-en">Team</p><p>現場の声を<br>受け止める</p></div>
+          <span class="trio-light" aria-hidden="true"></span>
+        </div>
+
+        <p class="view-sub">育成で大切にしている、4つのこと</p>
+        <ol class="view-points">
+          <li><span>01</span><b>まず、本人の気持ちを聴く。</b>何に意欲を感じ、どこに不安や不満があるのかを、対話で知る。</li>
+          <li><span>02</span><b>役割と期待を共有する。</b>「トップの代わり」ではなく、何を担い、どこまで自分で決めてよいかを明確にする。</li>
+          <li><span>03</span><b>仕事と判断を、段階的に任せる。</b>任せた後は細かく指示し直さず、結果や迷いを一緒に振り返る。</li>
+          <li><span>04</span><b>現場との信頼関係を育てる。</b>一方的に指示するのではなく、メンバーの気持ちや意見を聞き、組織の方向性につなげる。</li>
+        </ol>
+        <p class="view-catch words">No.2を育てるとは、自分の感情を理解し、人の気持ちを受け止め、<br class="pc">組織の目的に沿って<em>主体的に判断できる人</em>を育てること。</p>
       </div>
-      <p class="why-catch reveal">No.2の育成は、<br class="sp">人事の課題ではなく、<br class="sp"><em>経営の課題</em>です。</p>
     </div>
   </section>
 
-  <!-- 2-3. OUR VIEW -->
-  <section class="view">
-    <div class="wrap">
-      <div class="view-head reveal">
-        <p class="label label-light">Our View</p>
-        <h2>No.2は、<br>トップの<br class="sp">コピーではない。</h2>
-        <blockquote class="view-quote">人は仕組みや指示だけでは動かない。<br>気持ちを理解され、受け止められたときに、<br class="pc">自分から動き出す。</blockquote>
-        <p>私たちは、感情と関係性を土台に、メンバーが自ら責任を持って進む組織を目指しています。<br class="pc">この考えをNo.2に当てはめると、No.2は、トップの指示を伝えるだけの人ではありません。</p>
+  <!-- 6. PROGRAM 10 -->
+  <section class="program-sec" id="program" data-theme="light" data-eq="right">
+    <div class="wrap program-grid">
+      <div class="program-media">
+        <figure class="clip"><img src="images/m-handshake.jpg" alt="握手を交わすビジネスパーソン" loading="lazy"></figure>
       </div>
-      <ol class="bridge-map reveal" aria-label="トップと現場をつなぐNo.2">
-        <li><small>Top</small>トップの思いを理解する</li>
-        <li class="is-core"><small>No.2</small>双方をつなぎ、<br>自分で判断して動く</li>
-        <li><small>Team</small>現場の声を受け止める</li>
-      </ol>
-      <p class="view-sub reveal">育成で大切にしている、4つのこと</p>
-      <ol class="view-points reveal">
-        <li><span>01</span><b>まず、本人の気持ちを聴く。</b>何に意欲を感じ、どこに不安や不満があるのかを、対話で知る。</li>
-        <li><span>02</span><b>役割と期待を共有する。</b>「トップの代わり」ではなく、何を担い、どこまで自分で決めてよいかを明確にする。</li>
-        <li><span>03</span><b>仕事と判断を、段階的に任せる。</b>任せた後は細かく指示し直さず、結果や迷いを一緒に振り返る。</li>
-        <li><span>04</span><b>現場との信頼関係を育てる。</b>一方的に指示するのではなく、メンバーの気持ちや意見を聞き、組織の方向性につなげる。</li>
-      </ol>
-      <p class="view-catch reveal">No.2を育てるとは、自分の感情を理解し、人の気持ちを受け止め、<br class="pc">組織の目的に沿って<em>主体的に判断できる人</em>を育てること。</p>
-    </div>
-  </section>
-
-  <!-- 2-4. PROGRAM 10 -->
-  <section class="section" id="program">
-    <div class="wrap">
-      <div class="sec-head">
+      <div class="program-body">
         <p class="label">Program 10</p>
-        <h2>組織No.2・右腕人材育成<br class="sp">／伴走型支援</h2>
+        <h2 class="kin">組織No.2・<br>右腕人材育成／<br>伴走型支援</h2>
         <p class="sec-lead">経営者の右腕となり、自ら判断して組織を動かせるNo.2人材を育成します。</p>
-      </div>
-      <ol class="program reveal">
-        <li>
-          <span class="step-num">01 — 育てる</span>
-          <h3>自ら判断できる<br>No.2を育成する</h3>
-          <p>対話で本人の意欲や不安を知り、役割と期待をすり合わせながら、組織を動かせる右腕へ育てます。</p>
-        </li>
-        <li>
-          <span class="step-num">02 — 伴走する</span>
-          <h3>実際の組織運営の中で、<br>実践で育てる</h3>
-          <p>候補者がいる場合は、実際の組織運営に伴走しながら、仕事と判断を段階的に任せ、実践の中で育てます。</p>
-        </li>
-        <li>
-          <span class="step-num">03 — 引き継ぐ</span>
-          <h3>一時的にNo.2を担い、<br>候補者へ引き継ぐ</h3>
-          <p>必要に応じて、波多野輝未が一時的にNo.2機能を担い、実務を候補者へ引き継ぎます。</p>
-        </li>
-      </ol>
-      <div class="center">
+        <ol class="stages">
+          <li>
+            <p class="stage-en">01 — Grow</p>
+            <h3>自ら判断できるNo.2を育成する</h3>
+            <p>対話で本人の意欲や不安を知り、役割と期待をすり合わせながら、組織を動かせる右腕へ育てます。</p>
+          </li>
+          <li>
+            <p class="stage-en">02 — Accompany</p>
+            <h3>実際の組織運営の中で、実践で育てる</h3>
+            <p>候補者がいる場合は、実際の組織運営に伴走しながら、仕事と判断を段階的に任せ、実践の中で育てます。</p>
+          </li>
+          <li>
+            <p class="stage-en">03 — Hand over</p>
+            <h3>一時的にNo.2を担い、候補者へ引き継ぐ</h3>
+            <p>必要に応じて、波多野輝未が一時的にNo.2機能を担い、実務を候補者へ引き継ぎます。</p>
+          </li>
+        </ol>
         <a class="btn btn-primary" data-cta="no2" href="#contact">No.2育成について相談する</a>
       </div>
     </div>
   </section>
 
-  <section class="bridge">
-    <div class="wrap narrow reveal">
-      <h2>ビジネスの課題は、<br>「人」と切り離せない。</h2>
-      <p class="bridge-words">商品をつくる。事業をつくる。組織をつくる。人を育てる。</p>
-      <p>どれだけ良い戦略や制度があっても、それを実際に動かすのは「人」です。<br>人が何を感じ、どう捉え、どう判断し、どう行動するのか。<br>ビジネスの多くの課題には、<strong>人の感情・認識・判断・行動</strong>が関わっています。</p>
+  <!-- 7. BRIDGE：流れる言葉 -->
+  <section class="bridge" data-theme="dark" data-eq="far">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-row"><span>商品をつくる。事業をつくる。組織をつくる。人を育てる。</span><span>商品をつくる。事業をつくる。組織をつくる。人を育てる。</span></div>
+      <div class="marquee-row is-rev"><span>Emotion — Recognition — Judgment — Action —</span><span>Emotion — Recognition — Judgment — Action —</span></div>
+    </div>
+    <div class="wrap narrow bridge-body">
+      <h2 class="kin">ビジネスの課題は、<br>「人」と切り離せない。</h2>
+      <p>どれだけ良い戦略や制度があっても、それを実際に動かすのは「人」です。<br class="pc">人が何を感じ、どう捉え、どう判断し、どう行動するのか。<br class="pc">ビジネスの多くの課題には、<strong>人の感情・認識・判断・行動</strong>が関わっています。</p>
     </div>
   </section>
 
-  <!-- 3. ABOUT -->
-  <section class="section" id="about">
-    <div class="wrap split">
-      <figure class="split-media reveal"><img src="images/approach.jpg" alt="テーブルを囲んで打ち合わせをする人たち" loading="lazy"></figure>
-      <div class="split-body reveal">
+  <!-- 8. ABOUT -->
+  <section class="about" id="about" data-theme="light" data-eq="left">
+    <div class="wrap split-2">
+      <figure class="about-media parallax"><img src="images/m-ieq.jpg" alt="IとEのブロックを置き換え、EQの文字をつくる手" loading="lazy"></figure>
+      <div class="about-body">
         <p class="label">About</p>
-        <h2>人とビジネスを、<br>切り離さない。</h2>
+        <h2 class="kin">人とビジネスを、<br>切り離さない。</h2>
         <p>EQ Business Nexusは、EQ・EQ認識理論を、経営・事業・商品・サービス・組織づくり・人材育成・理念教育・認定事業などへ活かし、ビジネスとして実際の形にしていくための<strong>個別伴走支援</strong>です。</p>
         <ol class="questions">
-          <li>今どこにいるのか</li>
-          <li>何を目指しているのか</li>
-          <li>何が止まっているのか</li>
-          <li>どこに課題があるのか</li>
+          <li><span>01</span>今どこにいるのか</li>
+          <li><span>02</span>何を目指しているのか</li>
+          <li><span>03</span>何が止まっているのか</li>
+          <li><span>04</span>どこに課題があるのか</li>
         </ol>
         <p>まずこれを整理し、必要な商品・サービス・導線・組織・育成制度・仕組みなどを、目的に合わせて一緒に設計します。</p>
-        <p class="note-box">EQを学ぶ教育プログラムでも、自分自身のEQを実践するEQTMでもありません。<br>EQを、ビジネス・事業・組織の具体的な形にするためのコンサルティングです。</p>
+        <p class="note">EQを学ぶ教育プログラムでも、自分自身のEQを実践するEQTMでもありません。<br>EQを、ビジネス・事業・組織の具体的な形にするためのコンサルティングです。</p>
         <a class="btn btn-primary" data-cta="consult" href="#contact">個別相談を申し込む</a>
       </div>
     </div>
   </section>
 
-  <!-- 4. FEATURES -->
-  <section class="section section-gray" id="why">
+  <!-- 9. FEATURES -->
+  <section class="features" id="why" data-theme="dark" data-eq="right">
     <div class="wrap">
+      <p class="mega" aria-hidden="true">Features</p>
       <div class="sec-head">
         <p class="label">Features</p>
-        <h2>EQ Business Nexusの<br class="sp">3つの特徴</h2>
+        <h2 class="kin">EQ Business Nexusの<br class="sp">3つの特徴</h2>
       </div>
-      <div class="reason reveal">
-        <figure><img src="images/reason-1.jpg" alt="浜辺で積み重なる石" loading="lazy"></figure>
-        <div class="reason-body">
-          <span class="reason-num">01</span>
-          <p class="reason-en">EQ × Business</p>
+      <div class="feature">
+        <figure class="parallax"><img src="images/reason-1.jpg" alt="浜辺で積み重なる石" loading="lazy"></figure>
+        <div class="feature-body">
+          <p class="feature-num">01</p>
+          <p class="feature-en">EQ × Business</p>
           <h3>EQとビジネス設計を、<br>組み合わせる。</h3>
           <p>EQだけを扱うのでも、ビジネスだけを扱うのでもありません。人の感情・認識・判断・行動を見るEQの視点と、ビジネス設計を組み合わせます。</p>
           <p>事業が伸びない理由は、商品だけにあるとは限りません。人の認識や関係性、役割まで含めて、人と事業の両方から課題を整理します。</p>
         </div>
       </div>
-      <div class="reason reverse reveal">
-        <figure><img src="images/reason-2.jpg" alt="朝焼けの水辺に立つ一本の木" loading="lazy"></figure>
-        <div class="reason-body">
-          <span class="reason-num">02</span>
-          <p class="reason-en">Tailor-made</p>
+      <div class="feature reverse">
+        <figure class="parallax"><img src="images/reason-2.jpg" alt="朝焼けの水辺に立つ一本の木" loading="lazy"></figure>
+        <div class="feature-body">
+          <p class="feature-num">02</p>
+          <p class="feature-en">Tailor-made</p>
           <h3>一人ひとりに合わせて、<br>設計する。</h3>
           <p>現在地・目的・事業規模・課題・組織の状態によって、必要な支援は変わります。一律の商品を当てはめるのではなく、支援内容を個別に設計します。</p>
         </div>
       </div>
-      <div class="reason reveal">
-        <figure><img src="images/reason-3.jpg" alt="遠くまで続く、明かりの灯った桟橋" loading="lazy"></figure>
-        <div class="reason-body">
-          <span class="reason-num">03</span>
-          <p class="reason-en">Implementation</p>
+      <div class="feature">
+        <figure class="parallax"><img src="images/reason-3.jpg" alt="遠くまで続く、明かりの灯った桟橋" loading="lazy"></figure>
+        <div class="feature-body">
+          <p class="feature-num">03</p>
+          <p class="feature-en">Implementation</p>
           <h3>実際に形にするところまで、<br>伴走する。</h3>
           <p>考えるだけ、企画するだけ、計画をつくるだけでは終わりません。商品にする。仕組みにする。人へ伝える。運用し、改善する。必要に応じて、実装まで伴走します。</p>
         </div>
@@ -223,67 +274,82 @@
     </div>
   </section>
 
-  <!-- 5. SERVICES -->
-  <section class="section" id="services">
+  <!-- 10. SERVICES -->
+  <section class="services" id="services" data-theme="light" data-eq="far">
     <div class="wrap">
+      <p class="mega" aria-hidden="true">Services</p>
       <div class="sec-head">
         <p class="label">Services</p>
-        <h2>こんなご相談を、<br class="sp">お受けしています。</h2>
+        <h2 class="kin">こんなご相談を、<br class="sp">お受けしています。</h2>
         <p class="sec-lead">10のコンサルティング領域を、4つのテーマに分けてご紹介します。</p>
       </div>
-      <div class="cards">
-        <article class="card reveal">
-          <span class="card-key">A</span>
-          <h3>事業・商品・サービスの<br>企画設計</h3>
-          <p>EQや自分の専門性を、商品・サービス・事業へ。「何を、誰に、どのような価値として届けるのか」を整理し、ビジネスとして形にします。</p>
-          <ul class="areas">
-            <li><span class="area-no">01</span><b>EQを活かしたビジネス・事業企画設計</b><small>商品企画／サービス設計／講座設計／事業コンセプト／提供価値／継続商品の設計</small></li>
-          </ul>
+      <div class="svc-grid">
+        <article class="svc">
+          <figure><img src="images/m-plan.jpg" alt="事業計画書とペン" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">A</p>
+            <h3>事業・商品・サービスの<br>企画設計</h3>
+            <p>EQや自分の専門性を、商品・サービス・事業へ。「何を、誰に、どのような価値として届けるのか」を整理し、ビジネスとして形にします。</p>
+            <ul class="areas">
+              <li><span class="area-no">01</span><b>EQを活かしたビジネス・事業企画設計</b><small>商品企画／サービス設計／講座設計／事業コンセプト／提供価値／継続商品の設計</small></li>
+            </ul>
+          </div>
         </article>
-        <article class="card reveal">
-          <span class="card-key">B</span>
-          <h3>集客の入口・<br>顧客導線の設計</h3>
-          <p>知ってもらう → 体験してもらう → 次のサービスへつなぐ。届けたい価値と、相手が求めているものをつなぐ、ビジネスの入口をつくります。</p>
-          <ul class="areas">
-            <li><span class="area-no">02</span><b>EQを活かしたフロント企画・導線設計</b><small>体験会／セミナー／イベント／説明会／入口商品／本商品への導線</small></li>
-          </ul>
+        <article class="svc">
+          <figure><img src="images/m-design.jpg" alt="色見本や資料を広げて企画を練る手元" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">B</p>
+            <h3>集客の入口・<br>顧客導線の設計</h3>
+            <p>知ってもらう、体験してもらう、次のサービスへつなぐ。届けたい価値と、相手が求めているものをつなぐ、ビジネスの入口をつくります。</p>
+            <ul class="areas">
+              <li><span class="area-no">02</span><b>EQを活かしたフロント企画・導線設計</b><small>体験会／セミナー／イベント／説明会／入口商品／本商品への導線</small></li>
+            </ul>
+          </div>
         </article>
-        <article class="card reveal">
-          <span class="card-key">C</span>
-          <h3>組織づくり・人材育成・<br>理念の実践</h3>
-          <p>人が育ち、自分から動き、協働できる組織へ。理念を「言葉」から「行動」へ変えるための教育・実践を設計します。</p>
-          <ul class="areas">
-            <li><span class="area-no">03</span><b>組織づくり<span class="nw">コンサルティング</span></b><small>役割／責任／判断／コミュニケーション／人材育成／チームづくり</small></li>
-            <li><span class="area-no">05</span><b>理念教育<span class="nw">コンサルティング</span></b><small>パーパス・ミッション・ビジョン・バリューの整理／理念教育／行動への落とし込み</small></li>
-            <li class="is-new"><span class="area-no">10</span><b>組織No.2・右腕人材育成<span class="nw">／伴走型支援</span></b><small>No.2候補の育成／実際の組織運営への伴走／一時的なNo.2機能の代行と引き継ぎ　<a href="#program">詳しく見る</a></small></li>
-          </ul>
+        <article class="svc">
+          <figure><img src="images/m-people.jpg" alt="ピラミッド状に並ぶ人形と、先頭に立つ一体" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">C</p>
+            <h3>組織づくり・人材育成・<br>理念の実践</h3>
+            <p>人が育ち、自分から動き、協働できる組織へ。理念を「言葉」から「行動」へ変えるための教育・実践を設計します。</p>
+            <ul class="areas">
+              <li><span class="area-no">03</span><b>組織づくり<span class="nw">コンサルティング</span></b><small>役割／責任／判断／コミュニケーション／人材育成／チームづくり</small></li>
+              <li><span class="area-no">05</span><b>理念教育<span class="nw">コンサルティング</span></b><small>パーパス・ミッション・ビジョン・バリューの整理／理念教育／行動への落とし込み</small></li>
+              <li class="is-new"><span class="area-no">10</span><b>組織No.2・右腕人材育成<span class="nw">／伴走型支援</span></b><small>No.2候補の育成／実際の組織運営への伴走／一時的なNo.2機能の代行と引き継ぎ　<a href="#program">詳しく見る</a></small></li>
+            </ul>
+          </div>
         </article>
-        <article class="card reveal">
-          <span class="card-key">D</span>
-          <h3>EQ事業、<br>協会・認定・育成事業の構築</h3>
-          <p>自分だけが提供する状態から、人を育て、人を通して価値を届ける事業へ。継続できる仕組みに整えます。</p>
-          <ul class="areas">
-            <li><span class="area-no">04</span><b>協会ビジネス<span class="nw">コンサルティング</span></b><small>講座体系／役割設計／育成導線／認定制度／事業構造</small></li>
-            <li><span class="area-no">07</span><b>EQ事業<span class="nw">コンサルティング</span></b><small>対象者／提供価値／商品・サービス／育成／導線／事業モデル</small></li>
-            <li><span class="area-no">08</span><b>認定事業・育成事業<span class="nw">コンサルティング</span></b><small>資格制度／インストラクター制度／トレーナー制度／認定基準／育成導線</small></li>
-          </ul>
+        <article class="svc">
+          <figure><img src="images/m-seminar.jpg" alt="スクリーンと椅子が並ぶ研修会場" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">D</p>
+            <h3>EQ事業、<br>協会・認定・育成事業の構築</h3>
+            <p>自分だけが提供する状態から、人を育て、人を通して価値を届ける事業へ。継続できる仕組みに整えます。</p>
+            <ul class="areas">
+              <li><span class="area-no">04</span><b>協会ビジネス<span class="nw">コンサルティング</span></b><small>講座体系／役割設計／育成導線／認定制度／事業構造</small></li>
+              <li><span class="area-no">07</span><b>EQ事業<span class="nw">コンサルティング</span></b><small>対象者／提供価値／商品・サービス／育成／導線／事業モデル</small></li>
+              <li><span class="area-no">08</span><b>認定事業・育成事業<span class="nw">コンサルティング</span></b><small>資格制度／インストラクター制度／トレーナー制度／認定基準／育成導線</small></li>
+            </ul>
+          </div>
         </article>
       </div>
       <div class="options">
-        <div class="option reveal">
-          <p class="option-label">06</p>
-          <div>
+        <article class="option">
+          <figure class="option-media is-card"><img src="images/corecard.jpg" alt="8色のEQコアカード®が円を描くように並んだ様子" loading="lazy"></figure>
+          <div class="option-body">
+            <p class="option-no">06</p>
             <h3>EQコアカード®を活かした<br>ビジネスコンサルティング</h3>
             <p>個人セッション、講座、研修、チームづくり、既存サービスとの組み合わせなど。EQコアカード®を、自分のビジネスの中でどのような価値として届けるのかを一緒に設計します。</p>
           </div>
-        </div>
-        <div class="option reveal">
-          <p class="option-label">09</p>
-          <div>
-            <h3>次世代リーダー・未来の経営者への<br>ビジネス伴走</h3>
+        </article>
+        <article class="option">
+          <figure class="option-media"><img src="images/m-leader.jpg" alt="窓辺に立つリーダーと、その背後のメンバーのシルエット" loading="lazy"></figure>
+          <div class="option-body">
+            <p class="option-no">09</p>
+            <h3>次世代リーダー・未来の経営者へのビジネス伴走</h3>
             <p>これから経営者になる人、組織を担う人が、経営・事業・人材育成・組織づくりを学びながら、人を活かし事業をつくれるリーダーへ成長するための伴走です。</p>
           </div>
-        </div>
+        </article>
       </div>
       <div class="center">
         <a class="btn btn-outline" data-cta="corporate" href="#contact">企業・組織での活用を相談する</a>
@@ -291,8 +357,8 @@
     </div>
   </section>
 
-  <!-- 6. PROCESS -->
-  <section class="section section-gray" id="process">
+  <!-- 11. PROCESS -->
+  <section class="section section-gray" id="process" data-theme="light" data-eq="far">
     <div class="wrap">
       <div class="sec-head">
         <p class="label">Process</p>
@@ -308,8 +374,8 @@
     </div>
   </section>
 
-  <!-- 7. FOR YOU / DIFFERENCE -->
-  <section class="section" id="for-you">
+  <!-- 12. FOR YOU / DIFFERENCE -->
+  <section class="section" id="for-you" data-theme="light" data-eq="far">
     <div class="wrap split reverse">
       <figure class="split-media reveal"><img src="images/target.jpg" alt="人と人とのつながりを手のひらに浮かべるビジネスパーソン" loading="lazy"></figure>
       <div class="split-body reveal">
@@ -368,11 +434,11 @@
     </div>
   </section>
 
-  <!-- 8. BELIEF -->
-  <section class="belief">
+  <!-- 13. BELIEF -->
+  <section class="belief" data-theme="dark" data-eq="center">
     <div class="wrap">
       <div class="belief-head reveal">
-        <p class="label label-light">Why Brifu</p>
+        <p class="label">Why Brifu</p>
         <h2>人の成長と、ビジネスの成長を<br class="pc">切り離さない。</h2>
         <p>株式会社Brifuは、EQをコミュニケーションスキルだけとして捉えていません。<br class="pc">感情・認識・判断・行動・人間関係・人材育成・組織・理念・事業は、すべてつながっています。</p>
       </div>
@@ -386,11 +452,11 @@
     </div>
   </section>
 
-  <!-- 9. CONTACT -->
-  <section class="final-cta" id="contact">
+  <!-- 14. CONTACT -->
+  <section class="final-cta" id="contact" data-theme="dark" data-eq="hide">
     <img class="final-bg" src="images/cta.jpg" alt="" loading="lazy">
     <div class="wrap">
-      <p class="label label-light">Contact</p>
+      <p class="label">Contact</p>
       <h2>EQを、<br class="sp">あなたの事業の<br class="sp">次の一歩へ。</h2>
       <p>EQ Business Nexusは、ご相談内容によって支援内容・期間・回数・契約内容・料金等が異なります。<br class="pc">現在の課題や、今後つくりたいビジネス・事業・組織についてお聞きしたうえで、必要な支援をご提案します。</p>
       <div class="cta-boxes">
@@ -409,8 +475,8 @@
 
 </main>
 
-<!-- 10. RELATED -->
-<section class="related" id="related">
+<!-- 15. RELATED -->
+<section class="related" id="related" data-theme="light" data-eq="hide">
   <div class="wrap">
     <p class="label">Related Sites</p>
     <h2 class="h2-sm">関連サイト</h2>
@@ -431,7 +497,7 @@
   </div>
 </section>
 
-<footer class="site-footer">
+<footer class="site-footer" data-theme="dark">
   <div class="wrap footer-inner">
     <p class="logo">EQ Business <span>Nexus</span></p>
     <ul class="footer-links">
@@ -446,6 +512,10 @@
   <a class="btn btn-primary" data-cta="consult" href="#contact">個別相談を申し込む</a>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
