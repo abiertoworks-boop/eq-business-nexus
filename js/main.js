@@ -113,7 +113,8 @@
       wordBlocks.push({ el: el, chars: splitChars(el) });
     });
   }
-  var issueLines = Array.prototype.slice.call(document.querySelectorAll('.issue-lines li'));
+  var issuesSec = document.querySelector('.issues');
+  var issueCards = Array.prototype.slice.call(document.querySelectorAll('.issue-card'));
   var parallaxImgs = Array.prototype.slice.call(document.querySelectorAll('.parallax img'));
   var drawIcons = Array.prototype.slice.call(document.querySelectorAll('.ring svg, .stage-icon svg'));
   var statement = document.querySelector('.statement');
@@ -133,12 +134,25 @@
       }
     }
     if (CAPTURE || REDUCE) return;
-    // 悩みの行：画面の中央に近いほど明るく
-    issueLines.forEach(function (li) {
-      var b = li.getBoundingClientRect();
-      var d = Math.abs(b.top + b.height / 2 - vh * 0.5) / (vh * 0.5);
-      li.style.opacity = (0.16 + 0.84 * clamp(1.25 - d * 1.4, 0, 1)).toFixed(3);
-    });
+    // 悩みのカード：PCは画面に留まったまま、スクロールのたびに左から1枚ずつ。スマホは画面に入ったものから順に
+    if (issueCards.length) {
+      var wide = window.innerWidth > 900;
+      var ir = issuesSec.getBoundingClientRect();
+      var ip = clamp(-ir.top / Math.max(1, ir.height - vh), 0, 1);
+      var active = -1;
+      issueCards.forEach(function (card, i) {
+        var lp;
+        if (wide) {
+          lp = clamp((ip - (0.04 + i * 0.16)) / 0.12, 0, 1);    // 1枚ごとに間をあけ、読める時間をつくる
+        } else {
+          lp = clamp((vh * 0.95 - card.getBoundingClientRect().top) / (vh * 0.35), 0, 1);
+        }
+        lp = ease(lp);
+        card.style.setProperty('--p', lp.toFixed(3));
+        if (lp > 0.9) active = i;
+      });
+      issueCards.forEach(function (card, i) { card.classList.toggle('is-active', wide && i === active); });
+    }
     // 文字が順に灯る
     wordBlocks.forEach(function (w) {
       var b = w.el.getBoundingClientRect();
