@@ -674,3 +674,56 @@ html.is-modal { overflow: hidden; }
   .cdialog-inner { padding: 40px 22px 28px; }
   .cform-2 { grid-template-columns: 1fr; }
 }
+
+/* プライバシーポリシー・特定商取引法に基づく表記 */
+body.legal-page { background: var(--paper); }
+.legal-header { position: sticky; }
+.legal-main { background: var(--paper); color: var(--text); padding: 88px 0 120px; }
+.legal-wrap { max-width: 920px; }
+.legal-title { font-size: clamp(26px, 3vw, 38px); color: var(--ink); margin-bottom: 40px; }
+.legal { background: var(--white); border-radius: 20px; padding: 52px 56px; box-shadow: 10px 10px 30px rgba(160,160,150,.25), -10px -10px 30px rgba(255,255,255,.9); font-size: 15px; line-height: 2; }
+.legal-lead { margin-bottom: 36px; }
+.legal-sec + .legal-sec { margin-top: 40px; }
+.legal h2 { font-size: 18px; color: var(--ink); padding: 0 0 12px; margin-bottom: 16px; border-bottom: 1px solid var(--rule-light); }
+.legal ol, .legal ul { padding-left: 1.6em; margin: 8px 0; }
+.legal ol { list-style: decimal; }
+.legal ul { list-style: disc; }
+.legal ol ol { list-style: lower-roman; }
+.legal li { margin: 4px 0; }
+.legal-contact { display: grid; grid-template-columns: max-content 1fr; gap: 6px 24px; margin: 16px 0 0; padding: 20px 24px; background: var(--paper); border-radius: 12px; }
+.legal-contact dt { font-weight: 700; color: var(--ink); }
+.legal-contact dd { margin: 0; }
+.legal-table { width: 100%; border-collapse: collapse; }
+.legal-table th, .legal-table td { padding: 20px 16px; border-bottom: 1px solid var(--rule-light); text-align: left; vertical-align: top; }
+.legal-table tr:first-child th, .legal-table tr:first-child td { border-top: 1px solid var(--rule-light); }
+.legal-table th { width: 30%; font-weight: 700; color: var(--ink); font-size: 14px; }
+.legal-table td p + p { margin-top: 14px; }
+.legal-table td p { margin: 0; }
+.legal-table small { color: var(--muted); }
+.legal-date { margin: 36px 0 0; text-align: right; color: var(--muted); font-size: 13px; }
+.legal-back { margin-top: 48px; text-align: center; }
+.cform-check a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  .legal-main { padding: 56px 0 88px; }
+  .legal { padding: 32px 22px; font-size: 14px; }
+  .legal-table th, .legal-table td { display: block; width: 100%; padding: 12px 4px; }
+  .legal-table th { border-bottom: 0; padding-bottom: 0; }
+  .legal-table tr:first-child td { border-top: 0; }
+  .legal-contact { grid-template-columns: 1fr; gap: 0; }
+  .legal-contact dd { margin-bottom: 8px; }
+}
+
+/* 高さの低い画面（ノートPCで窓を小さくしたときなど）：トップのボタンが隠れないよう、余白と文字を少し詰める */
+@media (min-width: 901px) and (max-height: 780px) {
+  .hero { min-height: 540px; }
+  .hero-inner { padding-top: calc(var(--header-h) + 18px); padding-bottom: 44px; }
+  .hero-kicker { margin-bottom: 6px; }
+  .hero-display { font-size: clamp(44px, min(9vw, 12.5vh), 160px); }
+  .hero h1 { font-size: clamp(24px, min(3.5vw, 4.9vh), 52px); margin-bottom: 10px; }
+  .hero-sub { font-size: 15px; }
+  .hero .cta-row { margin-top: 22px; }
+  .hero .btn { min-height: 50px; }
+  .hero-count { bottom: 44px; }
+  .hero-scroll { bottom: 12px; }
+}
+.legal-header .ext-nav { margin-left: auto; }

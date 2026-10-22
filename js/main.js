@@ -60,7 +60,7 @@
       var email = f('email').value.trim(), tel = f('tel').value.trim(), message = f('message').value.trim();
       if (!name || !email || !message) return fail('未入力の必須項目があります。お名前・メールアドレス・ご相談内容をご入力ください。');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('メールアドレスの形式をご確認ください。');
-      if (!f('agree').checked) return fail('入力内容をご確認の上、チェックを付けてください。');
+      if (!f('agree').checked) return fail('プライバシーポリシーをご確認の上、チェックを付けてください。');
 
       var btn = form.querySelector('.cform-send');
       btn.disabled = true; btn.textContent = '送信しています…';
