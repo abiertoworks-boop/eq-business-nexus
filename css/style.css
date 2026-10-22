@@ -135,8 +135,8 @@ body.theme-light .site-header.is-solid .logo span { color: var(--accent); }
 /* ---------- 1. HERO ---------- */
 .hero { position: relative; height: 100vh; height: 100svh; min-height: 640px; overflow: hidden; color: #fff; background: var(--night); }
 .hero-media { position: absolute; inset: 0; }
-.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 1.6s ease, transform 7s linear; }
-.hero-video.is-on { opacity: 1; transform: scale(1); }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; transform: translateZ(0); backface-visibility: hidden; }   /* 拡大の動きはブレの原因になるので付けない */
+.hero-video.is-on { opacity: 1; }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,10,14,.55) 0%, rgba(8,10,14,.35) 40%, rgba(8,10,14,.85) 100%), linear-gradient(90deg, rgba(8,10,14,.6), rgba(8,10,14,0) 70%); }
 .hero-inner { position: relative; z-index: 2; height: 100%; max-width: 1400px; margin: 0 auto; padding: calc(var(--header-h) + 40px) var(--gutter) 64px; display: flex; flex-direction: column; }
 .hero-kicker { font-family: var(--font-en); font-size: 13px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.8); margin: 0 0 12px; }
@@ -582,12 +582,10 @@ body.theme-light .site-header.is-solid .btn-primary { box-shadow: 4px 4px 10px r
 /* Process：枠の中にアイコン。触れると浮き、アイコンが弾む */
 .steps li { position: relative; border-radius: 18px; background: linear-gradient(145deg, #ffffff, #efefea); box-shadow: 10px 10px 24px rgba(160,160,150,.35), -10px -10px 24px rgba(255,255,255,.95); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
 .step-icon-img { display: grid; place-items: center; width: 84px; height: 84px; margin-bottom: 20px; border-radius: 50%; background: linear-gradient(145deg, #f3f7f9, #e2eaee); box-shadow: inset 4px 4px 10px rgba(150,170,180,.35), inset -4px -4px 10px rgba(255,255,255,.95); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
-.step-icon-img img { width: 58px; height: 58px; object-fit: contain; transition: transform .6s var(--ease); }
-.steps li:hover { transform: translateY(-10px); box-shadow: 16px 18px 34px rgba(150,150,140,.4), -10px -10px 24px #fff, 0 0 0 1px rgba(0,152,179,.25); }
-.steps li:hover .step-icon-img { box-shadow: 6px 6px 14px rgba(150,170,180,.4), -6px -6px 14px #fff, 0 0 24px rgba(0,152,179,.25); }
-.steps li:hover .step-icon-img img { animation: iconHop .7s var(--ease); }
+.step-icon-img img { width: 58px; height: 58px; object-fit: contain; }
+.steps li { transition: transform .8s cubic-bezier(.25,.8,.25,1), box-shadow .8s cubic-bezier(.25,.8,.25,1); }
+.steps li:hover { transform: translateY(-5px); box-shadow: 14px 16px 30px rgba(150,150,140,.38), -10px -10px 24px #fff, 0 0 0 1px rgba(0,152,179,.18); }   /* 枠全体が静かに浮く（アイコンは動かさない） */
 .steps li:hover .step-num { color: #0098b3; }
-@keyframes iconHop { 0% { transform: none; } 35% { transform: translateY(-8px) rotate(-6deg) scale(1.08); } 65% { transform: translateY(2px) rotate(3deg); } 100% { transform: none; } }
 
 /* 動きのあるホバー（各所） */
 .issue-card { transition: border-color .5s, box-shadow .5s, translate .5s var(--ease); }
@@ -635,3 +633,44 @@ body.theme-light .site-header.is-solid .btn-primary { box-shadow: 4px 4px 10px r
 .feature figure.glow-frame { aspect-ratio: 1075 / 650; }
 .feature figure.glow-frame img { width: 100%; height: 100%; object-fit: cover; }
 .feature:hover .glow-frame img { transform: scale(1.03); }
+
+/* Services 06・09：A〜D と同じカードの形 */
+.svc-grid-more { margin: 28px 0 72px; }
+.svc figure.is-card { position: relative; background: #fff; }
+.svc figure.is-card img { position: absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: contain; }
+.svc-grid-more .svc-key { font-size: 40px; }
+
+/* お問い合わせフォーム（ダイアログ） */
+html.is-modal { overflow: hidden; }
+.cdialog { width: min(760px, calc(100vw - 32px)); max-height: calc(100vh - 48px); max-height: calc(100svh - 48px); padding: 0; border: 0; border-radius: 22px; background: var(--paper); color: var(--text); box-shadow: 0 40px 120px rgba(0,0,0,.5), 0 0 0 1px rgba(127,212,255,.25); overflow: auto; }
+.cdialog::backdrop { background: rgba(6,9,14,.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.cdialog[open] { animation: dlgIn .5s var(--ease); }
+@keyframes dlgIn { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+.cdialog-inner { position: relative; padding: 48px 52px 44px; --h: var(--ink); --acc: var(--accent); }
+.cdialog .label { color: var(--accent); margin-bottom: 8px; }
+.cdialog-title { font-size: clamp(22px, 2.4vw, 30px); margin: 0 0 8px; color: var(--ink); }
+.cdialog-lead { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+.cdialog-close { position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; border: 0; border-radius: 50%; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; background: linear-gradient(145deg, #ffffff, #e8e8e3); box-shadow: 4px 4px 10px rgba(170,170,160,.45), -4px -4px 10px #fff; transition: transform .3s; }
+.cdialog-close:hover { transform: rotate(90deg); }
+.cform { display: grid; gap: 18px; }
+.cform-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.cform-row { display: grid; gap: 8px; }
+.cform-lb { font-size: 14px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.cform-lb em { font-style: normal; font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); padding: 2px 8px; border-radius: 6px; letter-spacing: .08em; }
+.cform input[type="text"], .cform input[type="email"], .cform input[type="tel"], .cform select, .cform textarea { width: 100%; font: inherit; font-size: 16px; color: var(--ink); padding: 13px 16px; border: 0; border-radius: 12px; background: #f1f1ed; box-shadow: inset 4px 4px 10px rgba(170,170,160,.4), inset -4px -4px 10px rgba(255,255,255,.95); outline: none; transition: box-shadow .3s; }
+.cform textarea { resize: vertical; min-height: 140px; line-height: 1.8; }
+.cform input:focus, .cform select:focus, .cform textarea:focus { box-shadow: inset 4px 4px 10px rgba(170,170,160,.4), inset -4px -4px 10px rgba(255,255,255,.95), 0 0 0 2px rgba(31,74,122,.55); }
+.cform-check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text); line-height: 1.7; cursor: pointer; }
+.cform-check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--accent); flex: none; }
+.cform-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.cform-err { margin: 0; padding: 12px 16px; border-radius: 10px; background: rgba(200,60,60,.08); color: #b03030; font-size: 14px; font-weight: 500; }
+.cform-send { width: 100%; margin-top: 4px; }
+.cform-send:disabled { opacity: .6; cursor: wait; }
+.cform-done { text-align: center; padding: 24px 0 8px; }
+.cform-done-title { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+.cform-done .btn { margin-top: 12px; }
+@media (max-width: 640px) {
+  .cdialog { max-height: calc(100svh - 24px); border-radius: 18px; }
+  .cdialog-inner { padding: 40px 22px 28px; }
+  .cform-2 { grid-template-columns: 1fr; }
+}

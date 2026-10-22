@@ -18,10 +18,71 @@
     corporate: 'mailto:' + MAIL + '?subject=' + encodeURIComponent('【企業・組織】EQ Business Nexus の活用相談') + '&body=' + BODY,
     inquiry:   'mailto:' + MAIL + '?subject=' + encodeURIComponent('【お問い合わせ】EQ Business Nexus') + '&body=' + BODY
   };
+  // JS が動かない環境では、ボタンはメール作成画面を開く（下のフォームの予備）
   document.querySelectorAll('[data-cta]').forEach(function (a) {
     var url = CTA[a.getAttribute('data-cta')];
     if (url) a.setAttribute('href', url);
   });
+
+  /* ---------- お問い合わせフォーム：各ボタンから開き、FormSubmit 経由で info@brifu.co.jp へ送る
+     （株式会社Brifu・EQ Gate のフォームと同じ仕組み。送信者には自動で受付メールが届く） ---------- */
+  (function () {
+    var dlg = document.getElementById('contactDialog');
+    var form = document.getElementById('contactForm');
+    if (!dlg || !form || typeof dlg.showModal !== 'function') return;   // 古いブラウザはメール作成画面のまま
+    var ENDPOINT = 'https://formsubmit.co/ajax/' + MAIL;
+    var TYPE = { no2: 0, consult: 1, corporate: 2, inquiry: 3 };
+    var err = document.getElementById('cformErr');
+    var done = document.getElementById('cformDone');
+    var f = function (n) { return form.elements.namedItem(n); };
+    var fail = function (msg) { err.textContent = msg; err.hidden = false; };
+
+    function open(kind) {
+      form.hidden = false; done.hidden = true; err.hidden = true;
+      f('type').selectedIndex = TYPE[kind] != null ? TYPE[kind] : 3;
+      document.documentElement.classList.add('is-modal');
+      dlg.showModal();
+      setTimeout(function () { f('name').focus(); }, 60);
+    }
+    function close() { dlg.close(); }
+    dlg.addEventListener('close', function () { document.documentElement.classList.remove('is-modal'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });   // 外側を押すと閉じる
+    dlg.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', close); });
+    document.querySelectorAll('[data-cta]').forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); e.stopImmediatePropagation(); open(a.getAttribute('data-cta')); });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      err.hidden = true;
+      if (f('_honey').value) return;   // いたずら送信よけ
+      var type = f('type').value, name = f('name').value.trim(), company = f('company').value.trim();
+      var email = f('email').value.trim(), tel = f('tel').value.trim(), message = f('message').value.trim();
+      if (!name || !email || !message) return fail('未入力の必須項目があります。お名前・メールアドレス・ご相談内容をご入力ください。');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('メールアドレスの形式をご確認ください。');
+      if (!f('agree').checked) return fail('入力内容をご確認の上、チェックを付けてください。');
+
+      var btn = form.querySelector('.cform-send');
+      btn.disabled = true; btn.textContent = '送信しています…';
+      var body = {
+        'ご相談の種類': type, 'お名前': name, '会社名・団体名': company || '（未記入）', 'メールアドレス': email,
+        'お電話番号': tel || '（未記入）', 'ご相談内容': message,
+        _replyto: email,
+        _subject: '【EQ Business Nexus】' + type + '｜' + name + '様',
+        _template: 'table', _captcha: 'false',
+        _autoresponse: name + '様\n\nEQ Business Nexus（株式会社Brifu）へお問い合わせいただき、ありがとうございます。\n以下の内容で受け付けました。担当者より折り返しご連絡いたします。\n\n' +
+          '■ご相談の種類\n' + type + '\n\n■ご相談内容\n' + message + '\n\n株式会社Brifu\ninfo@brifu.co.jp'
+      };
+      fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (String(res.success) !== 'true') throw new Error(res.message || 'failed');
+          form.reset(); form.hidden = true; done.hidden = false;
+        })
+        .catch(function () { fail('送信できませんでした。時間をおいて再度お試しいただくか、info@brifu.co.jp へ直接メールでご連絡ください。'); })
+        .then(function () { btn.disabled = false; btn.textContent = 'この内容で送信する'; });
+    });
+  })();
 
   var root = document.documentElement;
   var body = document.body;
@@ -261,7 +322,7 @@
     gsap.to('.hd-1', { x: -220, ease: 'none', scrollTrigger: heroST });
     gsap.to('.hd-2', { x: 180, ease: 'none', scrollTrigger: heroST });
     gsap.to('.hd-3', { x: -140, ease: 'none', scrollTrigger: heroST });
-    gsap.fromTo('.hero-media', { scale: 1, opacity: 1 }, { scale: 1.12, opacity: 0.35, ease: 'none', scrollTrigger: heroST });
+    gsap.fromTo('.hero-media', { opacity: 1 }, { opacity: 0.35, ease: 'none', scrollTrigger: heroST });   // 拡大はブレて見えるので、暗くなるだけにする
     gsap.fromTo('.hero-copy', { y: 0, opacity: 1 }, { y: -80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: '70% top', scrub: true } });
 
     // 見出し：1文字ずつ立ち上がる
@@ -288,7 +349,7 @@
 
     // 本文のまとまり：うっすら上がって現れる（ぼかしの動きは重いので使わない）
     gsap.utils.toArray('.statement-lead, .issues-note, .view-head > p, .view-quote, .rings li, .stages li > div, .program-head .sec-lead, .bridge-lead, .chain li, .about-grid > *, .feature-body, .svc-body, .option-body').forEach(function (el) {
-      gsap.fromTo(el, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out',
+      gsap.fromTo(el, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out', clearProps: 'transform',
         scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
     });
 
@@ -303,7 +364,7 @@
     [['.steps li', 0.12], ['.check-list li', 0.06], ['.cta-box', 0.15], ['.related-card', 0.15]].forEach(function (g) {
       var els = gsap.utils.toArray(g[0]);
       if (!els.length) return;
-      gsap.fromTo(els, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: g[1],
+      gsap.fromTo(els, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: g[1], clearProps: 'transform',
         scrollTrigger: { trigger: els[0], start: 'top 88%', once: true } });
     });
     gsap.fromTo('.features .glow-frame', { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.3, ease: 'expo.out', stagger: 0.1,

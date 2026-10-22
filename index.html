@@ -387,21 +387,27 @@
           </div>
         </article>
       </div>
-      <div class="options">
-        <article class="option">
-          <figure class="option-media is-card"><img src="images/corecard.jpg" alt="8色のEQコアカード®が円を描くように並んだ様子" loading="lazy"></figure>
-          <div class="option-body">
-            <p class="option-no">06</p>
+      <div class="svc-grid svc-grid-more">
+        <article class="svc">
+          <figure class="is-card"><img src="images/corecard.jpg" alt="8色のEQコアカード®が円を描くように並んだ様子" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">06</p>
             <h3>EQコアカード®を活かした<br>ビジネスコンサルティング</h3>
             <p>個人セッション、講座、研修、チームづくりなど。EQコアカード®を、自分のビジネスでどう活かし、どう届けるかを一緒に考えます。</p>
+            <ul class="areas">
+              <li><span class="area-no">06</span><b>EQコアカード®活用<span class="nw">コンサルティング</span></b><small>個人セッション／講座／研修／チームづくり／既存サービスとの組み合わせ</small></li>
+            </ul>
           </div>
         </article>
-        <article class="option">
-          <figure class="option-media"><img src="images/m-leader.jpg" alt="窓辺に立つリーダーと、その背後のメンバーのシルエット" loading="lazy"></figure>
-          <div class="option-body">
-            <p class="option-no">09</p>
-            <h3>次世代リーダー・未来の経営者へのビジネス伴走</h3>
+        <article class="svc">
+          <figure><img src="images/m-leader.jpg" alt="窓辺に立つリーダーと、その背後のメンバーのシルエット" loading="lazy"></figure>
+          <div class="svc-body">
+            <p class="svc-key">09</p>
+            <h3>次世代リーダー・<br>未来の経営者へのビジネス伴走</h3>
             <p>これから経営者になる人、組織を担う人のための伴走です。経営・事業・人材育成・組織づくりを学びながら、人を活かせるリーダーへ成長していきます。</p>
+            <ul class="areas">
+              <li><span class="area-no">09</span><b>次世代リーダー<span class="nw">ビジネス伴走</span></b><small>経営／事業／人材育成／組織づくり／リーダーとしての成長</small></li>
+            </ul>
           </div>
         </article>
       </div>
@@ -505,6 +511,44 @@
     <p class="copy">運営：<a href="https://abiertoworks-boop.github.io/brifu-site/" target="_blank" rel="noopener">株式会社Brifu</a></p>
   </div>
 </footer>
+
+<!-- お問い合わせフォーム（各ボタンから開く。送信先：info@brifu.co.jp） -->
+<dialog class="cdialog" id="contactDialog" aria-labelledby="cdialogTitle">
+  <div class="cdialog-inner">
+    <button class="cdialog-close" type="button" aria-label="閉じる" data-close>&times;</button>
+    <p class="label">Contact</p>
+    <h2 id="cdialogTitle" class="cdialog-title">お問い合わせ・ご相談</h2>
+    <p class="cdialog-lead">内容を確認のうえ、担当者よりメールでご連絡いたします。</p>
+    <form class="cform" id="contactForm" novalidate>
+      <label class="cform-row"><span class="cform-lb"><em>必須</em>ご相談の種類</span>
+        <select name="type" required>
+          <option value="No.2・右腕人材の育成について">No.2・右腕人材の育成について</option>
+          <option value="個別相談（EQを事業に活かしたい）">個別相談（EQを事業に活かしたい）</option>
+          <option value="企業・組織での活用について">企業・組織での活用について</option>
+          <option value="その他のお問い合わせ">その他のお問い合わせ</option>
+        </select>
+      </label>
+      <div class="cform-2">
+        <label class="cform-row"><span class="cform-lb"><em>必須</em>お名前</span><input type="text" name="name" placeholder="田中 太郎" autocomplete="name" required></label>
+        <label class="cform-row"><span class="cform-lb">会社名・団体名</span><input type="text" name="company" placeholder="株式会社〇〇" autocomplete="organization"></label>
+      </div>
+      <div class="cform-2">
+        <label class="cform-row"><span class="cform-lb"><em>必須</em>メールアドレス</span><input type="email" name="email" placeholder="info@sample.com" autocomplete="email" required></label>
+        <label class="cform-row"><span class="cform-lb">お電話番号</span><input type="tel" name="tel" placeholder="090-0000-0000" autocomplete="tel"></label>
+      </div>
+      <label class="cform-row"><span class="cform-lb"><em>必須</em>ご相談内容</span><textarea name="message" rows="6" placeholder="今の課題や、ご相談したいことを分かる範囲でご記入ください。" required></textarea></label>
+      <label class="cform-check"><input type="checkbox" name="agree" required>入力内容を確認しました。いただいた情報は、このお問い合わせへの返信にのみ使用します。</label>
+      <input type="text" name="_honey" class="cform-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="cform-err" id="cformErr" role="alert" hidden></p>
+      <button class="btn btn-primary btn-lg cform-send" type="submit">この内容で送信する</button>
+    </form>
+    <div class="cform-done" id="cformDone" hidden>
+      <p class="cform-done-title">送信が完了しました。</p>
+      <p>お問い合わせいただき、ありがとうございます。<br>ご入力のメールアドレスに受付の確認メールをお送りしました。担当者より折り返しご連絡いたします。</p>
+      <button class="btn btn-outline" type="button" data-close>閉じる</button>
+    </div>
+  </div>
+</dialog>
 
 <div class="sticky-cta">
   <a class="btn btn-primary" data-cta="consult" href="#contact">個別相談を申し込む</a>
