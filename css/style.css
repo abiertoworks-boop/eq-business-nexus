@@ -549,3 +549,89 @@ body.theme-light .site-header.is-solid .btn-primary { box-shadow: 4px 4px 10px r
   .chain { flex-direction: column; gap: 14px; margin: 48px 0 64px; }
   .chain li + li::before { left: 50%; top: -15px; width: 2px; height: 16px; }
 }
+
+/* ===== 2026-10-22 追加 ===== */
+
+/* 光が回る枠の角度（conic-gradient を角丸の四角でも回すため） */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes angSpin { to { --ang: 360deg; } }
+
+/* 流れ図の枠：育てるときの4つと同じ「回る光＋息づく光」 */
+.chain li { animation: ringBreath 3.2s ease-in-out infinite; }
+.chain li::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--ang), transparent 0 55%, rgba(127,212,255,.95) 72%, #ffe27a 84%, transparent 100%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: angSpin 4.5s linear infinite; pointer-events: none; }
+.chain li:nth-child(2), .chain li:nth-child(2)::after { animation-delay: -.6s; }
+.chain li:nth-child(3), .chain li:nth-child(3)::after { animation-delay: -1.2s; }
+.chain li:nth-child(4), .chain li:nth-child(4)::after { animation-delay: -1.8s; }
+.chain li.is-goal, .chain li.is-goal::after { animation-delay: -2.4s; }
+.chain li.is-goal { animation-name: goalBreath; }
+@keyframes goalBreath { 0%, 100% { box-shadow: 0 0 16px rgba(255,200,80,.35), inset 0 0 14px rgba(255,200,80,.18); } 50% { box-shadow: 0 0 36px rgba(255,200,80,.65), inset 0 0 26px rgba(255,200,80,.35); } }
+.chain li:hover { transform: translateY(-4px); }
+
+/* About：左の文を大きくし、右の項目と同じ高さにそろえる */
+.about-grid { align-items: stretch; }
+.about-text { align-self: center; font-size: clamp(20px, 2.05vw, 29px); line-height: 1.85; letter-spacing: .05em; }
+
+/* 角丸＋光る枠（Features・For You の写真） */
+.glow-frame { position: relative; border-radius: 20px; overflow: hidden; isolation: isolate; box-shadow: 0 0 0 1px rgba(127,212,255,.25), 0 0 34px rgba(60,150,255,.28); transition: box-shadow .6s var(--ease), transform .6s var(--ease); }
+.glow-frame::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--ang), transparent 0 50%, rgba(127,212,255,.95) 68%, #ffe27a 80%, transparent 96%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: angSpin 6s linear infinite; pointer-events: none; }
+.glow-frame img { transition: transform 1.2s var(--ease), filter .6s; }
+.feature:hover .glow-frame, .split:hover .glow-frame { transform: translateY(-6px); box-shadow: 0 0 0 1px rgba(127,212,255,.5), 0 0 60px rgba(60,150,255,.5); }
+.feature:hover .glow-frame img { filter: brightness(1.08) saturate(1.1); }
+[data-theme="light"] .glow-frame { box-shadow: 0 0 0 1px rgba(31,74,122,.15), 0 20px 50px rgba(31,74,122,.18), 0 0 30px rgba(60,150,255,.22); }
+
+/* Process：枠の中にアイコン。触れると浮き、アイコンが弾む */
+.steps li { position: relative; border-radius: 18px; background: linear-gradient(145deg, #ffffff, #efefea); box-shadow: 10px 10px 24px rgba(160,160,150,.35), -10px -10px 24px rgba(255,255,255,.95); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+.step-icon-img { display: grid; place-items: center; width: 84px; height: 84px; margin-bottom: 20px; border-radius: 50%; background: linear-gradient(145deg, #f3f7f9, #e2eaee); box-shadow: inset 4px 4px 10px rgba(150,170,180,.35), inset -4px -4px 10px rgba(255,255,255,.95); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+.step-icon-img img { width: 58px; height: 58px; object-fit: contain; transition: transform .6s var(--ease); }
+.steps li:hover { transform: translateY(-10px); box-shadow: 16px 18px 34px rgba(150,150,140,.4), -10px -10px 24px #fff, 0 0 0 1px rgba(0,152,179,.25); }
+.steps li:hover .step-icon-img { box-shadow: 6px 6px 14px rgba(150,170,180,.4), -6px -6px 14px #fff, 0 0 24px rgba(0,152,179,.25); }
+.steps li:hover .step-icon-img img { animation: iconHop .7s var(--ease); }
+.steps li:hover .step-num { color: #0098b3; }
+@keyframes iconHop { 0% { transform: none; } 35% { transform: translateY(-8px) rotate(-6deg) scale(1.08); } 65% { transform: translateY(2px) rotate(3deg); } 100% { transform: none; } }
+
+/* 動きのあるホバー（各所） */
+.issue-card { transition: border-color .5s, box-shadow .5s, translate .5s var(--ease); }
+.issue-card:hover { translate: 0 -8px; border-color: rgba(127,212,255,.6); box-shadow: 0 0 0 1px rgba(127,212,255,.25), 0 18px 50px rgba(40,120,255,.3); }
+.issue-card:hover img { scale: 1.06; transition: scale 1s var(--ease); }
+.trio-card:hover { border-color: rgba(143,179,224,.75); }
+.why-card figure { border-radius: 16px; }
+.why-card:hover h3 { color: var(--accent); transition: color .4s; }
+.stages li { transition: transform .5s var(--ease); }
+.stages li:hover { transform: translateX(10px); }
+.stages li:hover .stage-icon { transform: scale(1.08) rotate(-4deg); }
+.stage-icon { transition: transform .6s var(--ease); }
+
+/* For You 以降：整えて、動きを付ける */
+#for-you .split { align-items: start; }
+#for-you .split-media { position: sticky; top: 14vh; }
+#for-you .split-media img { aspect-ratio: 4 / 5; }
+.check-list { counter-reset: fy; }
+.check-list li { position: relative; counter-increment: fy; padding: 16px 12px 16px 52px; border-radius: 12px; border-bottom-color: var(--rule-light); transition: background .4s, transform .4s var(--ease), color .4s; }
+.check-list li::before { content: counter(fy, decimal-leading-zero); position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--font-en); font-size: 12px; font-weight: 700; letter-spacing: .1em; color: var(--accent); opacity: .7; transition: opacity .4s, color .4s; }
+.check-list li:hover { background: rgba(31,74,122,.06); transform: translateX(8px); color: var(--accent-dark); }
+.check-list li:hover::before { opacity: 1; color: #0098b3; }
+.final-cta h2 { text-shadow: 0 0 30px rgba(80,160,255,.35); }
+.cta-box { position: relative; border-radius: 18px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.05); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 20px 50px rgba(0,0,0,.35); transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s; }
+.cta-box::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--ang), transparent 0 60%, rgba(127,212,255,.9) 76%, #ffe27a 86%, transparent 100%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: angSpin 5s linear infinite; opacity: 0; transition: opacity .5s; pointer-events: none; }
+.cta-box:hover { transform: translateY(-8px); border-color: rgba(127,212,255,.4); box-shadow: 0 26px 60px rgba(0,0,0,.45), 0 0 40px rgba(60,150,255,.3); }
+.cta-box:hover::after { opacity: 1; }
+.related-card { border-radius: 18px; background: linear-gradient(145deg, #ffffff, #efefea); box-shadow: 10px 10px 24px rgba(160,160,150,.35), -10px -10px 24px rgba(255,255,255,.95); }
+.related-card:hover { transform: translateY(-8px); box-shadow: 16px 18px 34px rgba(150,150,140,.4), -10px -10px 24px #fff, 0 0 0 1px rgba(31,74,122,.2); }
+.related-card:hover .related-go { color: var(--accent); }
+.related-go { transition: color .4s; }
+.footer-links a { transition: color .3s, text-shadow .3s; }
+.footer-links a:hover { color: var(--accent-light); text-shadow: 0 0 12px rgba(127,212,255,.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chain li, .chain li::after, .glow-frame::after, .cta-box::after { animation: none; }
+}
+@media (max-width: 900px) {
+  .about-text { font-size: 20px; }
+  #for-you .split-media { position: static; }
+  #for-you .split-media img { aspect-ratio: 3 / 2; }
+  .steps li:hover, .stages li:hover { transform: none; }
+}
+/* Features の写真：文字入りの写真が切れないよう、写真と同じ比率で全体を見せる */
+.feature figure.glow-frame { aspect-ratio: 1075 / 650; }
+.feature figure.glow-frame img { width: 100%; height: 100%; object-fit: cover; }
+.feature:hover .glow-frame img { transform: scale(1.03); }

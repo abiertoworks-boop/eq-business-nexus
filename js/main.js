@@ -281,7 +281,7 @@
     });
 
     // 写真：上下から幕が開くように現れる
-    document.querySelectorAll('.svc figure, .option-media, .why-card figure, .feature figure, .trio-card figure').forEach(function (el) {
+    document.querySelectorAll('.svc figure, .option-media, .why-card figure, .trio-card figure').forEach(function (el) {
       gsap.fromTo(el, { clipPath: 'inset(18% 0% 18% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.out',
         scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
     });
@@ -298,6 +298,16 @@
           .fromTo('.trio-card.is-right', { x: 90, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2, ease: 'expo.out' }, 0)
           .fromTo('.trio-card.is-core', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'expo.out' }, 0.25)
           .fromTo('.trio-link', { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, 0.6);
+
+    // Process・For You・お問い合わせ・関連サイト：順番に立ち上がる
+    [['.steps li', 0.12], ['.check-list li', 0.06], ['.cta-box', 0.15], ['.related-card', 0.15]].forEach(function (g) {
+      var els = gsap.utils.toArray(g[0]);
+      if (!els.length) return;
+      gsap.fromTo(els, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: g[1],
+        scrollTrigger: { trigger: els[0], start: 'top 88%', once: true } });
+    });
+    gsap.fromTo('.features .glow-frame', { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.3, ease: 'expo.out', stagger: 0.1,
+      scrollTrigger: { trigger: '.features', start: 'top 70%', once: true } });
 
     // 理由の4枚：PCでは縦スクロールに合わせて横へ流れる
     var mm = gsap.matchMedia();
@@ -471,6 +481,13 @@
       st.ry = lerp(st.ry, lerp(-3.4, 0, a) + (statementP > .5 ? (statementP - .5) * .5 : 0), 0.2);
       st.rx = lerp(st.rx, lerp(0.9, 0.06, a), 0.2);
       spin = 0;
+    } else if (eqMode === 'orbit') {
+      // Features 以降：時間とスクロールで、奥へ下がったり手前に来たり、左右へ揺れたりしながら回る
+      var sx = Math.sin(t * 0.32 + y * 0.0009);
+      var depth = 0.5 + 0.5 * Math.sin(t * 0.45 + y * 0.0012);
+      target = { x: W * 0.3 * sx, y: H * 0.08 * Math.cos(t * 0.27), z: lerp(-20, -330, depth), s: window.innerWidth < 900 ? .62 : .55, o: .6 };
+      st.ry = lerp(st.ry, Math.sin(spin) * .7 + sx * .6, 0.05);
+      st.rx = lerp(st.rx, .15 + .25 * Math.cos(t * .3), 0.05);
     } else {
       target = pose(eqMode);
       // 真横を向いて板に見えないよう、振れ幅をおさえる
